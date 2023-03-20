@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>image/windowIcon.png</file>
+        <file>image/userImage2.png</file>
+        <file>image/02.png</file>
+        <file>image/04.png</file>
+        <file>image/05.png</file>
+        <file>image/06.png</file>
+        <file>image/07.png</file>
+        <file>image/09.png</file>
+        <file>image/10.png</file>
+        <file>image/01.png</file>
+        <file>image/03.png</file>
+        <file>image/08.png</file>
+        <file>image/windowIcon2.png</file>
+        <file>image/searchIcon.png</file>
+        <file>image/windowTop.png</file>
+        <file>image/userImage.png</file>
+        <file>image/hzp.png</file>
+        <file>image/xj.png</file>
+        <file>image/wmj.png</file>
+        <file>image/hx.png</file>
+        <file>image/expression.png</file>
+        <file>image/file.png</file>
+        <file>image/screenShot.png</file>
+        <file>image/msgRecords.png</file>
+        <file>image/lhw.png</file>
+        <file>image/lxp.png</file>
+    </qresource>
+</RCC>
