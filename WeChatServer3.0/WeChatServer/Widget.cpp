@@ -204,7 +204,6 @@ void Widget::serverSend()
             {
                 emit mysocket->WriteMessage(byteArray);
             }
-
         }
     }
     //发送给选择的客户端

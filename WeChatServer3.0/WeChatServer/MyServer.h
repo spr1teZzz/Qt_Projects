@@ -17,6 +17,7 @@ public:
 	MySocket* mysocket;//socket指针
 	QString str_inf;//ip端口字符串
 	int threadIndex;//所在线程ID
+    int uid;//socket连接的uid
 };
 
 
@@ -37,7 +38,7 @@ public:
 private:
     void incomingConnection(qintptr socketDescriptor);
 public slots:
-    void AddInf(MySocket* mysocket, int index);//添加信息
+    void AddInf(MySocket* mysocket, int index,int uid);//添加信息
     void RemoveInf(MySocket* mysocket);//移除信息
-
+    void Foward(int fid, int tid,QString msg); //服务器转发消息
 };

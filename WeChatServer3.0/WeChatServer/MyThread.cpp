@@ -29,7 +29,7 @@ void MyThread::run()
 	connect(sockethelper, &SocketHelper::Create, sockethelper, &SocketHelper::CreateSocket);
 	connect(sockethelper, &SocketHelper::AddList, myserver, &MyServer::AddInf);
 	connect(sockethelper, &SocketHelper::RemoveList, myserver, &MyServer::RemoveInf);
-
+    connect(sockethelper, &SocketHelper::UserCommunication, myserver, &MyServer::Foward);
 	exec();
 }
 
@@ -49,7 +49,7 @@ void SocketHelper::CreateSocket(qintptr socketDescriptor, int index)
     //初始化socket
     tcpsocket->setSocketDescriptor(socketDescriptor);
     //发送到UI线程记录信息
-    emit AddList(tcpsocket, index);//
+    emit AddList(tcpsocket, index,0);//uid为-1表示未登录
 
     if (index != -1)//非UI线程时
     {
@@ -71,7 +71,6 @@ void SocketHelper::CreateSocket(qintptr socketDescriptor, int index)
     connect(tcpsocket, &MySocket::readyRead, tcpsocket, &MySocket::deal_readyRead);
     //关联断开连接时的处理槽
     connect(tcpsocket, &MySocket::disconnected, tcpsocket, &MySocket::deal_disconnect);
-
     QString ip = tcpsocket->peerAddress().toString();
     quint16 port = tcpsocket->peerPort();
     QString message = QString("[%1:%2] 已连接").arg(ip).arg(port);

@@ -15,8 +15,9 @@ public slots:
     void CreateSocket(qintptr socketDescriptor, int index);//创建socket
 signals:
     void Create(qintptr socketDescriptor, int index);//创建
-    void AddList(MySocket* tcpsocket, int index);//添加信息
+    void AddList(MySocket* tcpsocket, int index,int uid);//添加信息
     void RemoveList(MySocket* tcpsocket);//移除信息
+    void UserCommunication(int fid, int tid, QString msg);//用户间通信
 };
 
 class MyThread : public QThread

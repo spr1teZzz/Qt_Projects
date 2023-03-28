@@ -1,10 +1,2 @@
-﻿  moc Widget.h
-  MyServer.cpp
-  MySocket.cpp
-  MyThread.cpp
-  Widget.cpp
-  main.cpp
-  moc_MyServer.cpp
-  moc_MySocket.cpp
-  moc_Widget.cpp
+﻿  main.cpp
   WeChatServer.vcxproj -> D:\Qt_projects\WeChatServer3.0\x64\Debug\WeChatServer.exe

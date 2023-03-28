@@ -99,19 +99,47 @@ void MyServer::incomingConnection(qintptr socketDescriptor)
     }
 }
 
-void MyServer::AddInf(MySocket* mysocket, int index) 
+
+
+
+void MyServer::AddInf(MySocket* mysocket, int index,int uid) 
 {
-    SocketInformation inf;
+    if (uid == 0)//新连接
+    {
+        SocketInformation inf;
+        QString ip = mysocket->peerAddress().toString();
+        quint16 port = mysocket->peerPort();
+        QString str_inf = QString("[%1:%2 (未登录)]").arg(ip).arg(port);
+        
+        inf.uid = uid;
+        inf.str_inf = str_inf;
+        inf.mysocket = mysocket;
+        inf.threadIndex = index;
+        this->list_information.append(inf);
+        this->widget->ui->comboBox->addItem(inf.str_inf, QVariant::fromValue(inf.mysocket));
+    }
+    else//登录
+    {
+        QString ip = mysocket->peerAddress().toString();
+        quint16 port = mysocket->peerPort();
+        QString str_inf = QString("[%1:%2 (uid:%3)]").arg(ip).arg(port).arg(uid);
+        for (int i = 1; i < this->widget->ui->comboBox->count(); i++)
+        {
+            if (mysocket == this->widget->ui->comboBox->itemData(i).value<MySocket*>())
+                this->widget->ui->comboBox->setItemText(i, str_inf);
+        }
+        
+        //修改uid至list_information
+        for (int i = 0; i < this->list_information.size(); ++i)
+        {
+            if (mysocket == this->list_information[i].mysocket)
+            {
+                qDebug() << "修改的uid:" << uid;
+                this->list_information[i].uid = uid;
+            }
+        }
 
-    QString ip = mysocket->peerAddress().toString();
-    quint16 port = mysocket->peerPort();
-    QString str_inf = QString("[%1:%2]").arg(ip).arg(port);
-
-    inf.str_inf = str_inf;
-    inf.mysocket = mysocket;
-    inf.threadIndex = index;
-    this->list_information.append(inf);
-    this->widget->ui->comboBox->addItem(inf.str_inf, QVariant::fromValue(inf.mysocket));
+    }
 }
 
 void MyServer::RemoveInf(MySocket* mysocket)
@@ -123,6 +151,22 @@ void MyServer::RemoveInf(MySocket* mysocket)
             this->list_information.removeAt(i);
             this->widget->ui->comboBox->removeItem(i + 1);
             break;
+        }
+    }
+}
+
+//服务器转发
+void MyServer::Foward(int fid, int tid, QString msg)
+{
+    //通过tid查找绑定的socket
+    QString data = "type=2&fid=" + QString::number(fid) + "&tid=" + QString::number(tid) + "&" + msg;
+    QByteArray byteArray = data.toLocal8Bit();
+    qDebug() << "Foward" << data;
+    for (int i = 0; i < this->list_information.count(); i++)
+    {
+        if (this->list_information[i].uid == tid)
+        {
+            this->list_information[i].mysocket->WriteMessage(byteArray);
         }
     }
 }
