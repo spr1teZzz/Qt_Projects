@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\C++Project\C++Study\QT_project\WeChatServer\x64\Release\WeChatServer.exe</FullPath>
+      <FullPath>D:\Qt_projects\WeChatServer3.0\x64\Release\WeChatServer.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

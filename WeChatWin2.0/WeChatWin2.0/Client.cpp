@@ -1,18 +1,12 @@
 #include "Client.h"
 #define PORT 8888
-#define IP "127.0.0.1"
+#define IP "192.168.5.94"
 Client::Client(int uid,QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
-    //初始化socket
-    //loginWidget::socket = new QTcpSocket(this);
-    //loginWidget::socket->connectToHost(IP, PORT);
-    
-    //连接后发送一条信息进行登录 from:uid ,to:0;
     from_id = uid;
     //QString login_msg = "from:" + QString::number(from_id) + ",to:0";
-    //socket->write(login_msg.toUtf8());
     connect(loginWidget::socket, SIGNAL(readyRead()), this, SLOT(recvMsg()));
     connect(ui.pushButtonSend, SIGNAL(clicked()), this, SLOT(sendMsg()));
     //鼠标移到发送按钮变成#D2D2D2 按住为#C6C6C6
@@ -20,6 +14,10 @@ Client::Client(int uid,QWidget *parent)
         "QPushButton:hover{background-color:#D2D2D2 ;}"
         "QPushButton:pressed{background-color:#C6C6C6;}");
     ui.textEditSend->setStyleSheet("background-color:#F5F5F5;border:none;");
+    
+    //未点击发送用户时,不能点击发送框和发送按钮隐藏
+    ui.textEditSend->setReadOnly(true);
+    ui.pushButtonSend->hide();
 }
 
 Client::~Client()
@@ -35,6 +33,14 @@ void Client::recvMsg()
     QString data = arr.data();
     qDebug() << "recvMsg:" + data;
     emit recvMsgSuccess(data);
+}
+
+void Client::openSend()
+{    
+    //点击发送用户时,发送框可用和发送按钮显示
+    ui.textEditSend->setReadOnly(false);
+    ui.pushButtonSend->show();
+
 }
 
 void Client::sendMsg()

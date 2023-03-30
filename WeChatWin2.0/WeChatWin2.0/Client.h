@@ -21,6 +21,8 @@ public:
 private slots:
 	void sendMsg();
 	void recvMsg();
+public slots:
+	void openSend();
 signals:
 	void sendMsgSuccess(QString msg);
 	void recvMsgSuccess(QString msg);

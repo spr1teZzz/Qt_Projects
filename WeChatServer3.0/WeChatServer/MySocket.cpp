@@ -31,7 +31,14 @@ void MySocket::deal_login(QStringList list)
 	login_db.setUserName("root");              //用户名
 	login_db.setPassword("123456");            //密码
 	login_db.setConnectOptions("CHARSET='utf8'");
-	login_db.open();
+	bool ok = login_db.open();
+	//if(ok) {
+	//	qDebug() << "成功连接数据库";
+	//}
+	//else
+	//{
+	//	QMessageBox::warning(NULL, "警告", "login无法连接数据库");
+	//}
 	//处理登录  发送信号
 	QSqlQuery login_query(login_db);
 	QString login_sql = "select * from wc_user where phone = '" + phone + "'and password = '" + password + "' ;";
@@ -66,6 +73,11 @@ void MySocket::deal_login(QStringList list)
 	{
 		qDebug() << "查询失败";
 	}
+
+	if (login_db.lastError().isValid()) {
+		qDebug() << QMessageBox::warning(NULL, "警告", login_db.lastError().text()); 
+	}
+
 	login_db.close();
 	//friendInfo、message查询
 	//获取信息列表
@@ -210,7 +222,7 @@ void MySocket::deal_chat(QStringList list)
 	//插入数据库
 	QString sql = QString("insert into wc_messagerecords(fromid,toid,msgdate,content) values('%1','%2',now(),'%3')").arg(fid).arg(tid).arg(recv_msg);
 	qDebug() << sql;
-	//insert_query.exec(sql);
+	insert_query.exec(sql);
 	db_insert_msg.close();
 
 	MySocket* tcpsocket = static_cast<MySocket*>(sender());
@@ -250,11 +262,11 @@ void MySocket::deal_write(QByteArray ba)
 
 void MySocket::deal_readyRead()
 {
-    MySocket* tcpsocket = static_cast<MySocket*>(sender());
-    //获取客户端发来的数据
-    QByteArray ba = tcpsocket->readAll();
-    QString data;
-    data = QString::fromLocal8Bit(ba);
+	MySocket* tcpsocket = static_cast<MySocket*>(sender());
+	//获取客户端发来的数据
+	QByteArray ba = tcpsocket->readAll();
+	QString data;
+	data = QString::fromLocal8Bit(ba);
 
 	//处理传过来的数据格式：from:2,to:3,hhh
 	qDebug() << "receivedata:" << data;
@@ -264,7 +276,7 @@ void MySocket::deal_readyRead()
 	{
 		deal_login(list);
 	}
-	else if(type ==2)
+	else if (type == 2)
 	{
 		deal_chat(list);
 	}
@@ -272,9 +284,4 @@ void MySocket::deal_readyRead()
 	{
 		qDebug() << "传送的数据有误";
 	}
-    ////数据打包
-    //qDebug() << "读取数据线程：" << QThread::currentThreadId();
-    //data = QString("[%1：%2 UID:%3] \n%4").arg(ip).arg(port).arg().arg(data);
-    ////发送到UI线程显示
-    //emit AddMessage(data);
 }

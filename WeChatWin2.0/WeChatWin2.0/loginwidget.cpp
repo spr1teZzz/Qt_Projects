@@ -1,6 +1,7 @@
 #include "loginwidget.h"
 #define PORT 8888
-#define IP "127.0.0.1"
+#define IP "192.168.5.94"
+
 QTcpSocket* loginWidget::socket = new QTcpSocket();
 loginWidget::loginWidget( QWidget* parent) :QWidget(parent)
 {
@@ -18,11 +19,8 @@ loginWidget::loginWidget( QWidget* parent) :QWidget(parent)
     //Í·Ïñ
     QLabel* img_label = new QLabel(this);
     img_label->setGeometry(100, 60, 80, 80);
-    //QPixmap* pm = new QPixmap();
-    //pm->load(":/img/image/userImage.png");
-    //img_label->setPixmap(*pm);
-    //img_label->setParent(this);
-    img_label->setStyleSheet("background-image:url(:/img/image/userImage2.png);Background-size:80px,80px;");
+    img_label->setStyleSheet("border-image:url(:/img/image/userImage4.png);");
+    img_label->setScaledContents(true);
     //ÕËºÅÃÜÂëÊäÈë¿ò
     LineEdit_username = new QLineEdit(this);
     LineEdit_password = new QLineEdit(this);
@@ -63,23 +61,22 @@ loginWidget::loginWidget( QWidget* parent) :QWidget(parent)
 
     //°ó¶¨µÇÂ¼°´Å¥
     connect(btn_login, &QPushButton::clicked, this, &loginWidget::btn_login);
+    connect(loginWidget::socket, SIGNAL(readyRead()), this, SLOT(recvMsg()));
 }
 void loginWidget::btn_login()
 {
     //Á¬½Ó·þÎñÆ÷Ð£ÑéµÇÂ¼
     QString username = LineEdit_username->text();
     QString password = LineEdit_password->text();
-
     QString login_msg = "type=1&username=" + username + "&password=" + password;
     loginWidget::socket->write(login_msg.toUtf8());
-    connect(loginWidget::socket, SIGNAL(readyRead()), this, SLOT(recvMsg()));
 }
 
 void loginWidget::recvMsg()
 {
     //½ÓÊÕ·þÎñÆ÷µÄÐ£ÑéÐÅÏ¢
     QByteArray arr = loginWidget::socket->readAll();
-    QString data = arr.data();
+    QString data = QString::fromUtf8(arr);
     qDebug() << "loginWidget::recvMsg()"<<data;
     //²ð½âdata
     QStringList list = data.split("&");
@@ -87,8 +84,7 @@ void loginWidget::recvMsg()
     if (success == "false")
     {
         //µÇÂ¼Ê§°Ü
-        QMessageBox::information(this, "login", "µÇÂ¼Ê§°Ü£¬ÕËºÅ»òÃÜÂë´íÎó!",
-            QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        QMessageBox::information(this, "login", "µÇÂ¼Ê§°Ü£¬ÕËºÅ»òÃÜÂë´íÎó!", QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
     }
     else
     {
@@ -107,8 +103,6 @@ void loginWidget::recvMsg()
         //½âÎöfriendInfo ºÍ Message
         QMap<int, userInfo> userinfo_map;
         QMap<int, QList<Message>> message_map;
-        //qDebug() << friendInfo;
-        //qDebug() << message;
         QStringList userList = friendInfo.split("/r");
         qDebug() << userList.size();
         
@@ -159,13 +153,10 @@ void loginWidget::recvMsg()
                 QString img="";
                 QString content="";
                 QStringList thirdList = secondList[j].split(",");
-                //qDebug() << "thirdList" + QString::number(i) << ":";
                 for (auto it : thirdList)
                 {
                     qDebug() << it;
                 }
-                //qDebug() << "**************************************";
-                //qDebug() << "thirdList.size()" << thirdList.size();
                 if (j == 0)
                 {
                     //ÌáÈ¡ message_id;
@@ -176,7 +167,6 @@ void loginWidget::recvMsg()
                     }
                     message_id = thirdList[0].mid(num).toInt();
                         
-                    //qDebug() <<" thirdList[0]"<< thirdList[0] << " message_id:" << message_id;
                     from_id = thirdList[1].mid(1).toInt();
                     to_id = thirdList[2].toInt();
                     msg_date = thirdList[3];
@@ -202,7 +192,6 @@ void loginWidget::recvMsg()
         disconnect(loginWidget::socket, SIGNAL(readyRead()), this, SLOT(recvMsg()));
         emit loginUser(user_id, user_url, userinfo_map,message_map);
         this->close();
-        
     }
 }
 
@@ -214,3 +203,6 @@ loginWidget::~loginWidget()
 {
    
 }
+
+
+

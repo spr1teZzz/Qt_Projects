@@ -18,7 +18,7 @@
 #include <QMenu>
 #include <QPair>
 #include <QVector>
-
+#include <QMouseEvent>
 class MainWidget : public QWidget
 {
     Q_OBJECT
@@ -30,6 +30,10 @@ public:
     QMap<int, QList<Message>> message_map;
     int user_uid;
     QString user_url;
+    Client *send_client;
+	QPoint curPos;
+	bool isPressed;
+	bool isMaxWin;
 signals:
     void closeLoginWindow();
 public slots:
@@ -53,11 +57,17 @@ public slots:
 	void topWindow();
 	void selectListWidgetItem(QListWidgetItem* item);
 private:
+
+
     Ui::MainWidgetClass ui;
+	int label_uid;
     void initForm();
     void signalSlotConnect();
     void selectToolButton(QToolButton* toolButton);
-    Client* send_client;
+
+	void mousePressEvent(QMouseEvent* event);
+	void mouseMoveEvent(QMouseEvent* event);
+	void mouseReleaseEvent(QMouseEvent* event);
 };
 
 //class listwidgetItem :public QListWidgetItem

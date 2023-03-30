@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/img">
         <file>image/windowIcon.png</file>
-        <file>image/userImage2.png</file>
         <file>image/02.png</file>
         <file>image/04.png</file>
         <file>image/05.png</file>
@@ -26,5 +25,7 @@
         <file>image/msgRecords.png</file>
         <file>image/lhw.png</file>
         <file>image/lxp.png</file>
+        <file>image/userImage2.png</file>
+        <file>image/userImage4.png</file>
     </qresource>
 </RCC>

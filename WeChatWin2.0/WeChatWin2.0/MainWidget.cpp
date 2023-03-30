@@ -4,6 +4,8 @@ MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
 {
     ui.setupUi(this);
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
+    this->setMouseTracking(true);
 }
 
 MainWidget::~MainWidget()
@@ -17,7 +19,7 @@ void MainWidget::initForm()
     //标题渲染
     this->resize(940, 720);
     this->setStyleSheet("background-color:#F5F5F5;");
-    this->setWindowFlags(Qt::FramelessWindowHint);
+
     //设置leftWigdet 背景颜色
     ui.widget_left->setStyleSheet("background-color:#2E2E2E;border:1px solid #2E2E2E;");
     ui.widget->setStyleSheet("background-color:#F5F5F5;border:1px solid #D1D1D1;");
@@ -40,7 +42,7 @@ void MainWidget::initForm()
 
     //发送消息窗口设置
     send_client = new Client(user_uid, this);
-    send_client->move(305, 560);
+    send_client->move(270+55, 450+70);
 
     //接收消息窗口设置
     ui.listWidgetShow->setStyleSheet("background-color:#F5F5F5;border:1px solid #D1D1D1;");
@@ -93,7 +95,6 @@ void MainWidget::initForm()
     externMenu->addAction(suggestAction);
     externMenu->addAction(settingsAction);
 
-
     // 设置内动作信号槽连接
     connect(moveAction, SIGNAL(triggered()), this, SLOT(slotActionShow()));
     connect(suggestAction, SIGNAL(triggered()), this, SLOT(slotActionShow()));
@@ -112,6 +113,8 @@ void MainWidget::initForm()
         userInfo_pair tmp(it.key(), it.value());
         userInfo_vec.append(tmp);
     }
+
+    //按照消息时间排序
     qSort(userInfo_vec.begin(), userInfo_vec.end(), [](userInfo_pair p1, userInfo_pair p2) {return p1.second.msg_date > p2.second.msg_date; });
 
     for (auto it : userInfo_vec)
@@ -134,6 +137,7 @@ void MainWidget::initForm()
     }
 
     connect(ui.listWidget, &QListWidget::itemClicked, this, &MainWidget::selectListWidgetItem);
+    connect(ui.listWidget, &QListWidget::itemClicked, send_client, &Client::openSend);
 
     //当接收到client发送过来的信号(发出消息)时,向listWidgetShow添加数据
     connect(send_client, &Client::sendMsgSuccess, this, &MainWidget::updateShowList);
@@ -197,7 +201,7 @@ void MainWidget::updateShowList(QString msg)
         chatFrom* cf = new chatFrom(tid, ":/img/image/" + userinfo_map[tid].image, friend_name, curDate, data);
         QListWidgetItem* frined_Item = new QListWidgetItem();
         ui.listWidget->insertItem(0, frined_Item);
-        frined_Item->setSizeHint(QSize(250, 70));
+        frined_Item->setSizeHint(QSize(240, 70));
         ui.listWidget->setItemWidget(frined_Item, cf);
         ui.listWidget->setCurrentRow(0);
         delete item;
@@ -229,7 +233,7 @@ void MainWidget::updateShowList(QString msg)
                 chatFrom* cf = new chatFrom(fid, ":/img/image/" + userinfo_map[fid].image, label_name->text(), curDate, data);
                 QListWidgetItem* frined_Item = new QListWidgetItem();
                 ui.listWidget->insertItem(0, frined_Item);
-                frined_Item->setSizeHint(QSize(250, 70));
+                frined_Item->setSizeHint(QSize(240, 70));
                 ui.listWidget->setItemWidget(frined_Item, cf);
                 //ui.listWidget->setCurrentRow(0);
                 delete pItem;
@@ -245,9 +249,9 @@ void MainWidget::rcvLogin(int uid, QString url, QMap<int, userInfo>userinfo, QMa
     message_map = message;
     user_uid = uid;
     user_url = url;
-    //qDebug() << "uid:" << uid << " user_url:" << user_url;
     //初始化窗口
     initForm();
+    //初始化槽函数
     signalSlotConnect();
     this->show();
 }
@@ -535,4 +539,28 @@ void MainWidget::selectListWidgetItem(QListWidgetItem* item)
     }
     //6.改变发送人
     send_client->changeToId(user_uid, checked_uid);
+}
+
+
+void MainWidget::mousePressEvent(QMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton) //如果鼠标左键按下
+    {
+        isPressed = true;
+        curPos = event->pos();    //记录当前的点击坐标
+    }
+}
+
+void MainWidget::mouseMoveEvent(QMouseEvent* event)
+{
+    if (isPressed) //如果鼠标左键按下           
+    {
+        this->move(event->pos() - curPos + this->pos());    //窗口移动
+    }
+}
+
+//鼠标释放
+void MainWidget::mouseReleaseEvent(QMouseEvent* event)
+{
+    isPressed = false;
 }

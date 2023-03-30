@@ -11,20 +11,24 @@ chatFrom::chatFrom(int uid, QString image, QString username, QString date, QStri
 	ui.label_image->setStyleSheet("background-image:url("+image+")");
 	ui.label_name->setStyleSheet("background-color:#DADBDC;border:none;");
 	ui.label_name->setText(username);
+
 	//字符串省略处理
 	QFontMetrics fontWidth(ui.label_msg->font());//得到每个字符的宽度
 	QString elideNote = fontWidth.elidedText(msg, Qt::ElideRight, 120);//最大宽度120像素
 	ui.label_msg->setText(elideNote);//显示省略好的字符串
 	ui.label_msg->setStyleSheet("background-color:#DADBDC;border:none;");
-
+	
 	//时间处理
 	QDateTime curDateTime = QDateTime::currentDateTime();
-	QString curDate = curDateTime.toString();
+	QString curDate = curDateTime.toString("yyyy-MM-dd");
 	QString day = date.mid(0,10);
+	//日期相同,则显示时间
+	QString hour = date.mid(11, 5);
+	qDebug() <<"curDate:"<<curDate<<" day:"<< day<<" hour : "<<hour;
+
 	if (day == curDate)
 	{
-		//日期相同,则显示时间
-		QString hour = date.mid(11, 5);
+
 		date = hour;
 	}
 	else if(day != nullptr)
