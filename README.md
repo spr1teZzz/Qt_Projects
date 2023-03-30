@@ -2,7 +2,7 @@
 
 QT项目
 
-本人qt版本：5.12 VisualStudio:2022
+本人qt版本：5.12    VisualStudio:2022      MySQL：8.02
 
 WeChatServer:适合自写聊天室2.0服务器端
 
