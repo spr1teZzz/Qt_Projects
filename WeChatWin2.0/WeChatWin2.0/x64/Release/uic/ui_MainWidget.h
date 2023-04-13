@@ -155,7 +155,10 @@ public:
         listWidget = new QListWidget(widgetChat);
         listWidget->setObjectName(QStringLiteral("listWidget"));
         listWidget->setGeometry(QRect(0, 0, 270, 650));
-        listWidget->setStyleSheet(QStringLiteral(""));
+        listWidget->setStyleSheet(QLatin1String("QListWidget{background:#E5E4E4; border:none;margin:0px,0px,0px,0px;}\n"
+"QListWidget::Item:hover{background:#DDDBDA; border:none}\n"
+"QListWidget::item:selected{background:#C8C7C6; border:none;    margin:0px,0px,0px,0px;}\n"
+""));
         widgetToolBar = new QWidget(pageChat);
         widgetToolBar->setObjectName(QStringLiteral("widgetToolBar"));
         widgetToolBar->setGeometry(QRect(274, 410, 610, 40));

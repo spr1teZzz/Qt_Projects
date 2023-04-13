@@ -81,21 +81,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="filemanager.cpp" />
+    <ClCompile Include="loginwidget.cpp" />
     <ClCompile Include="MsgFrom.cpp" />
+    <ClCompile Include="textlabel.cpp" />
     <QtRcc Include="MainWidget.qrc" />
     <QtRcc Include="res.qrc" />
     <QtUic Include="chatFrom.ui" />
     <QtUic Include="Client.ui" />
+    <QtUic Include="loginwidget.ui" />
     <QtUic Include="MainWidget.ui" />
     <QtMoc Include="MainWidget.h" />
     <ClCompile Include="chatFrom.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="loginwidget.cpp" />
     <ClCompile Include="MainWidget.cpp" />
     <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="loginwidget.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="chatFrom.h" />
@@ -105,6 +105,15 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MsgFrom.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="loginwidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="filemanager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="textlabel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

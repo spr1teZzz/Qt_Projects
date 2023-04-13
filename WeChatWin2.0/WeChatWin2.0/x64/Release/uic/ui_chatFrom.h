@@ -24,8 +24,8 @@ class Ui_chatFromClass
 public:
     QLabel *label_image;
     QLabel *label_name;
-    QLabel *label_date;
     QLabel *label_msg;
+    QLabel *label_date;
     QLabel *label_uid;
 
     void setupUi(QWidget *chatFromClass)
@@ -39,15 +39,15 @@ public:
         label_name = new QLabel(chatFromClass);
         label_name->setObjectName(QStringLiteral("label_name"));
         label_name->setGeometry(QRect(70, 17, 110, 15));
-        label_date = new QLabel(chatFromClass);
-        label_date->setObjectName(QStringLiteral("label_date"));
-        label_date->setGeometry(QRect(190, 10, 50, 15));
         label_msg = new QLabel(chatFromClass);
         label_msg->setObjectName(QStringLiteral("label_msg"));
         label_msg->setGeometry(QRect(70, 40, 120, 15));
+        label_date = new QLabel(chatFromClass);
+        label_date->setObjectName(QStringLiteral("label_date"));
+        label_date->setGeometry(QRect(190, 10, 50, 15));
         label_uid = new QLabel(chatFromClass);
         label_uid->setObjectName(QStringLiteral("label_uid"));
-        label_uid->setGeometry(QRect(190, 40, 54, 12));
+        label_uid->setGeometry(QRect(190, 40, 55, 12));
 
         retranslateUi(chatFromClass);
 
@@ -59,8 +59,8 @@ public:
         chatFromClass->setWindowTitle(QApplication::translate("chatFromClass", "chatFrom", 0));
         label_image->setText(QString());
         label_name->setText(QString());
-        label_date->setText(QString());
         label_msg->setText(QString());
+        label_date->setText(QString());
         label_uid->setText(QString());
     } // retranslateUi
 

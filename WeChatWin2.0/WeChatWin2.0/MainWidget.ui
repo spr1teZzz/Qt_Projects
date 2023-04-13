@@ -346,7 +346,10 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">QListWidget{background:#E5E4E4; border:none;margin:0px,0px,0px,0px;}
+QListWidget::Item:hover{background:#DDDBDA; border:none}
+QListWidget::item:selected{background:#C8C7C6; border:none;    margin:0px,0px,0px,0px;}
+</string>
       </property>
      </widget>
     </widget>

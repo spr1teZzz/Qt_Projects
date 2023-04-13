@@ -18,6 +18,7 @@
 #include <QMenu>
 #include <QPair>
 #include <QVector>
+#include <QScrollBar>
 #include <QMouseEvent>
 class MainWidget : public QWidget
 {
@@ -57,17 +58,16 @@ public slots:
 	void topWindow();
 	void selectListWidgetItem(QListWidgetItem* item);
 private:
-
-
     Ui::MainWidgetClass ui;
 	int label_uid;
     void initForm();
     void signalSlotConnect();
     void selectToolButton(QToolButton* toolButton);
-
 	void mousePressEvent(QMouseEvent* event);
 	void mouseMoveEvent(QMouseEvent* event);
 	void mouseReleaseEvent(QMouseEvent* event);
+
+	void dealMessageTime(QString curMsgTime);
 };
 
 //class listwidgetItem :public QListWidgetItem

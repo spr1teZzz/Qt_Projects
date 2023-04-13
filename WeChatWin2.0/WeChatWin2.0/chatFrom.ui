@@ -39,19 +39,6 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_date">
-   <property name="geometry">
-    <rect>
-     <x>190</x>
-     <y>10</y>
-     <width>50</width>
-     <height>15</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_msg">
    <property name="geometry">
     <rect>
@@ -65,12 +52,25 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_date">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>10</y>
+     <width>50</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <widget class="QLabel" name="label_uid">
    <property name="geometry">
     <rect>
      <x>190</x>
      <y>40</y>
-     <width>54</width>
+     <width>55</width>
      <height>12</height>
     </rect>
    </property>

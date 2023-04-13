@@ -2,11 +2,14 @@
 #define PORT 8888
 #define IP "192.168.5.94"
 
-QTcpSocket* loginWidget::socket = new QTcpSocket();
-loginWidget::loginWidget( QWidget* parent) :QWidget(parent)
+QTcpSocket* LoginWidget::socket = new QTcpSocket();
+LoginWidget::LoginWidget(QWidget *parent)
+	: QWidget(parent)
+	, ui(new Ui::LoginWidgetClass())
 {
+	ui->setupUi(this);
     //初始化socket 连接服务器
-    loginWidget::socket->connectToHost(IP, PORT);
+    LoginWidget::socket->connectToHost(IP, PORT);
     //背景 设置成白色
     this->resize(280, 340);
     this->setWindowTitle("微信");
@@ -15,69 +18,51 @@ loginWidget::loginWidget( QWidget* parent) :QWidget(parent)
     this->setAutoFillBackground(true);
     this->setPalette(pal);
     this->setFixedSize(this->geometry().size());
-
+    //账号框
+    ui->LineEdit_username->installEventFilter(this);
+    //密码框
+    ui->LineEdit_password->setEchoMode(QLineEdit::Password);
     //头像
-    QLabel* img_label = new QLabel(this);
-    img_label->setGeometry(100, 60, 80, 80);
-    img_label->setStyleSheet("border-image:url(:/img/image/userImage4.png);");
-    img_label->setScaledContents(true);
-    //账号密码输入框
-    LineEdit_username = new QLineEdit(this);
-    LineEdit_password = new QLineEdit(this);
-    LineEdit_password->setEchoMode(QLineEdit::Password);
-    LineEdit_username->setGeometry(85, 190, 145, 25);
-    LineEdit_password->setGeometry(85, 220, 145, 25);
+    QPixmap pixmap = QPixmap(":/img/image/login_in.png");
+    QPixmap scaledPixmap = pixmap.scaled(80, 80, Qt::KeepAspectRatio);
+    ui->label_img->setPixmap(scaledPixmap); 
 
-    //账号密码显示
-    QLabel* label_userId = new QLabel(this);
-    QLabel* label_password = new QLabel(this);
-
-    label_userId->setGeometry(40, 187, 40, 30);
-    label_password->setGeometry(40, 217, 40, 30);
+    //账号密码提示
     QFont ft1;
     ft1.setPointSize(12);
-    label_userId->setFont(ft1);
-    label_password->setFont(ft1);
-    label_userId->setText("账 号");
-    label_password->setText("密 码");
-
-    QPushButton* btn_login = new QPushButton(this);
-    btn_login->setGeometry(40, 280, 200, 35);//
-    btn_login->setStyleSheet("QPushButton{background-color: #07C160;border-radius: 2px;border-style: outset;}"
+    ui->label_userId->setFont(ft1);
+    ui->label_password->setFont(ft1);
+    ui->label_userId->setText("账 号");
+    ui->label_password->setText("密 码");
+    
+    //登录按钮
+    ui->btn_login->setStyleSheet("QPushButton{background-color: #07C160;border-radius: 2px;border-style: outset;}"
         "QPushButton:hover{background-color:#38CD7F ;}"
         "QPushButton:pressed{background-color:#07C160;");
-    btn_login->setText("登 录");
-    QPalette btn_pal = btn_login->palette();             //startBtn是我已经定义好的QPushButton对象
+    ui->btn_login->setText("登 录");
+    QPalette btn_pal = ui->btn_login->palette();             //startBtn是我已经定义好的QPushButton对象
     btn_pal.setColor(QPalette::ButtonText, Qt::white);    //设置按钮上的字体颜色，理论上可以，实际上就是可以
-    btn_login->setPalette(btn_pal);
-
-    //昵称
-    QLabel* username = new QLabel(this);
-    username->setText("向 北");
-    username->setGeometry(115, 140, 50, 30);
-    QFont ft;
-    ft.setPointSize(14);
-    username->setFont(ft);
-
+    ui->btn_login->setPalette(btn_pal);
     //绑定登录按钮
-    connect(btn_login, &QPushButton::clicked, this, &loginWidget::btn_login);
-    connect(loginWidget::socket, SIGNAL(readyRead()), this, SLOT(recvMsg()));
+    connect(ui->btn_login, &QPushButton::clicked, this, &LoginWidget::btn_login);
+    connect(LoginWidget::socket, SIGNAL(readyRead()), this, SLOT(recvMsg()));
 }
-void loginWidget::btn_login()
+
+void LoginWidget::btn_login()
 {
     //连接服务器校验登录
-    QString username = LineEdit_username->text();
-    QString password = LineEdit_password->text();
+    QString username = ui->LineEdit_username->text();
+    QString password = ui->LineEdit_password->text();
     QString login_msg = "type=1&username=" + username + "&password=" + password;
-    loginWidget::socket->write(login_msg.toUtf8());
+    LoginWidget::socket->write(login_msg.toUtf8());
 }
 
-void loginWidget::recvMsg()
+void LoginWidget::recvMsg()
 {
     //接收服务器的校验信息
-    QByteArray arr = loginWidget::socket->readAll();
+    QByteArray arr = LoginWidget::socket->readAll();
     QString data = QString::fromUtf8(arr);
-    qDebug() << "loginWidget::recvMsg()"<<data;
+    qDebug() << "loginWidget::recvMsg()" << data;
     //拆解data
     QStringList list = data.split("&");
     QString success = (list[0].split("="))[1];
@@ -105,14 +90,15 @@ void loginWidget::recvMsg()
         QMap<int, QList<Message>> message_map;
         QStringList userList = friendInfo.split("/r");
         qDebug() << userList.size();
-        
-        for (int i = 0; i < userList.size()-1; ++i)
+
+        for (int i = 0; i < userList.size() - 1; ++i)
         {
             QString frined;
             if (i == 0) //第一个元素处理{{ }
             {
                 frined = userList[i].mid(2, userList[i].size() - 3);
-            }else if (i == userList.size() - 1) //最后一个元素处理{ }}
+            }
+            else if (i == userList.size() - 1) //最后一个元素处理{ }}
             {
                 frined = userList[i].mid(1, userList[i].size() - 3);
             }
@@ -137,21 +123,21 @@ void loginWidget::recvMsg()
             userInfo tmp = userInfo(uid, username, remark_name, sex, wechat_id, image, address, source, msg_date, content);
             userinfo_map.insert(uid, tmp);
         }
-        QStringList firstList = message.split("/r/r",QString::SkipEmptyParts);
-        for (int i = 0; i < firstList.size()-1; ++i)
+        QStringList firstList = message.split("/r/r", QString::SkipEmptyParts);
+        for (int i = 0; i < firstList.size() - 1; ++i)
         {
             //if (firstList[i] == nullptr) continue;
             //通过 ","分割获取MessageList的uid
             QStringList secondList = firstList[i].split("/r");
             int message_id = 0;
             QList<Message> msg_list;
-            for (int j = 0; j < secondList.size()-1; ++j)
+            for (int j = 0; j < secondList.size() - 1; ++j)
             {
-                int from_id=0;
-                int to_id=0;
-                QString msg_date="";
-                QString img="";
-                QString content="";
+                int from_id = 0;
+                int to_id = 0;
+                QString msg_date = "";
+                QString img = "";
+                QString content = "";
                 QStringList thirdList = secondList[j].split(",");
                 for (auto it : thirdList)
                 {
@@ -166,12 +152,19 @@ void loginWidget::recvMsg()
                         num = 6;
                     }
                     message_id = thirdList[0].mid(num).toInt();
-                        
+
                     from_id = thirdList[1].mid(1).toInt();
                     to_id = thirdList[2].toInt();
                     msg_date = thirdList[3];
                     img = thirdList[4];
-                    content = thirdList[5].mid(0, thirdList[5].size() - 1);
+                    //获取所有内容
+                    int size = 0;
+                    for (int k = 0; k <= 4; ++k)
+                    {
+                        size += thirdList[k].size()+1;
+                    }
+                    content = secondList[j].mid(size, secondList[j].size() - size-1);
+                    
                 }
                 else
                 {
@@ -179,7 +172,14 @@ void loginWidget::recvMsg()
                     to_id = thirdList[1].toInt();
                     msg_date = thirdList[2];
                     img = thirdList[3];
-                    content = thirdList[4].mid(0, thirdList[4].size() - 1);
+                    //content = thirdList[4].mid(0, thirdList[4].size() - 1);
+                    //获取所有内容
+                    int size = 0;
+                    for (int k = 0; k <= 3; ++k)
+                    {
+                        size += thirdList[k].size()+1;
+                    }
+                    content = secondList[j].mid(size, secondList[j].size()-size-1);
                 }
                 msg_list.append(Message(from_id, to_id, msg_date, img, content));
             }
@@ -189,20 +189,66 @@ void loginWidget::recvMsg()
         }
         //登录成功给信号
         //解除绑定connect(loginWidget::socket, SIGNAL(readyRead()), this, SLOT(recvMsg()));
-        disconnect(loginWidget::socket, SIGNAL(readyRead()), this, SLOT(recvMsg()));
-        emit loginUser(user_id, user_url, userinfo_map,message_map);
+        disconnect(LoginWidget::socket, SIGNAL(readyRead()), this, SLOT(recvMsg()));
+        emit loginUser(user_id, user_url, userinfo_map, message_map);
         this->close();
     }
 }
+bool LoginWidget::eventFilter(QObject* obj, QEvent* event)
+{
 
-void loginWidget::loginWindowClose()
+    if (event->type() == QEvent::FocusOut && obj == ui->LineEdit_username &&ui->LineEdit_username->text() != "") {
+        // 处理鼠标离开LineEdit框事件
+        // 创建QGraphicsOpacityEffect并设置其透明度为0
+        QGraphicsOpacityEffect* effect = new QGraphicsOpacityEffect;
+        effect->setOpacity(0.0);
+        ui->label_img->setGraphicsEffect(effect);
+        // 创建动画并将其应用于QGraphicsOpacityEffect的透明度属性
+        QPropertyAnimation* animation = new QPropertyAnimation(effect, "opacity");
+        animation->setDuration(1000); // 动画时间为1秒
+        animation->setStartValue(0.0);
+        animation->setEndValue(1.0);
+        //通过改变用户账号框 获取用户头像
+        QString curpath = QDir::currentPath() + "/..";
+        QString path = curpath + "/userData/userdata.ini";
+        QFile file(path);
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            
+            QTextStream in(&file);
+            while (!in.atEnd()) {
+                QString line = in.readLine();
+                //格式:phone img
+                QStringList  list = line.split(" ");
+                if (list[0] == ui->LineEdit_username->text())
+                {   
+                    
+                    QPixmap pixmap = QPixmap(list[1]); // 本地路径
+                    QPixmap scaledPixmap = pixmap.scaled(80, 80, Qt::KeepAspectRatio);
+                    ui->label_img->setPixmap(scaledPixmap);
+                    // 启动动画
+                    animation->start();
+                    break;
+                }
+                else
+                {
+                    QPixmap pixmap = QPixmap(":/img/image/login_in.png");
+                    QPixmap scaledPixmap = pixmap.scaled(80, 80, Qt::KeepAspectRatio);
+                    ui->label_img->setPixmap(scaledPixmap);
+                    // 启动动画
+                    animation->start();
+                }
+            }
+            file.close();
+        }
+    }
+    return false;
+}
+void LoginWidget::loginWindowClose()
 {
     this->close();
 }
-loginWidget::~loginWidget()
+LoginWidget::~LoginWidget()
 {
-   
+    delete ui;
 }
-
-
 
