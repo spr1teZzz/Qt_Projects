@@ -1,5 +1,7 @@
 #include "MainWidget.h"
 typedef QPair<int, userInfo>userInfo_pair;
+
+
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -54,14 +56,29 @@ void MainWidget::initForm()
     ui.pushButtonRecords->setIcon(QIcon(pixmapMsg));
 
     //发送消息窗口设置
-    send_client = new Client(user_uid, this);
-    send_client->move(270+55, 450+70);
+    //send_client = new Client(user_uid, this);
+    //send_client->move(270+55, 450+70);
+    textedit = new MyTextEdit(this);
+    textedit->setGeometry(320, 510, 620, 130);
+    textedit->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+    ui.pushButtonSend->setStyleSheet("QPushButton{ background-color:#E9E9E9; border-radius: 2px; border:none; font-weight:bold; color:#07CEBB; font-size:12px; }"
+        "QPushButton:hover{background-color:#D2D2D2 ;}"
+        "QPushButton:pressed{background-color:#C6C6C6;}");
+
+    //发送消息为空提示
+    emptyMsgLabel = new QLabel(this);
+    emptyMsgLabel->setGeometry(780, 610, 110, 30);
+    emptyMsgLabel->setStyleSheet("background-color:#FFFFFF;font-size:12px;border-radius:5px;");
+    emptyMsgLabel->setAlignment(Qt::AlignHCenter| Qt::AlignVCenter);
+    emptyMsgLabel->setText("不能发送空白消息");
+    emptyMsgLabel->hide();
 
     //接收消息窗口设置
     ui.listWidgetShow->setStyleSheet("background-color:#F5F5F5;border:1px solid #D1D1D1;");
     ui.listWidgetShow->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui.listWidgetShow->setSelectionMode(QAbstractItemView::NoSelection);
     ui.listWidgetShow->setFocusPolicy(Qt::NoFocus);
+    ui.listWidgetShow->setFlow(QListWidget::TopToBottom);
     //窗口设置
     ui.pushButtonTop->setStyleSheet("background-image:url(:/img/image/windowTop.png);");
 
@@ -164,13 +181,6 @@ void MainWidget::initForm()
         ui.listWidget->setItemWidget(pItem, cf);
         ui.listWidget->sortItems(Qt::DescendingOrder);
     }
-
-    connect(ui.listWidget, &QListWidget::itemClicked, this, &MainWidget::selectListWidgetItem);
-    connect(ui.listWidget, &QListWidget::itemClicked, send_client, &Client::openSend);
-    //当接收到client发送过来的信号(发出消息)时,向listWidgetShow添加数据
-    connect(send_client, &Client::sendMsgSuccess, this, &MainWidget::updateShowList);
-    //当接收到client发送过来的信号(接收消息)时,向listWidgetShow添加数据
-    connect(send_client, &Client::recvMsgSuccess, this, &MainWidget::updateShowList);
 }
 
 void MainWidget::signalSlotConnect()
@@ -186,13 +196,20 @@ void MainWidget::signalSlotConnect()
     connect(ui.toolButtonProgram, SIGNAL(clicked()), this, SLOT(slotToolButtonProgram()));
     connect(ui.toolButtonPhone, SIGNAL(clicked()), this, SLOT(slotToolButtonPhone()));
     connect(ui.toolButtonSettings, SIGNAL(clicked()), this, SLOT(slotToolButtonSettings()));
+    connect(ui.listWidget, &QListWidget::itemClicked, this, &MainWidget::selectListWidgetItem);
+    connect(LoginWidget::socket, SIGNAL(readyRead()), this, SLOT(recvMsg()));
+    connect(ui.pushButtonSend, SIGNAL(clicked()), this, SLOT(sendMsg()));
+    connect(ui.pushButtonExpression, SIGNAL(clicked()), this, SLOT(selectExpression()));
+    connect(ui.pushButtonFile, SIGNAL(clicked()), this, SLOT(selectFile()));
+    connect(ui.pushButtonShot, SIGNAL(clicked()), this, SLOT(screenCut()));
+    connect(ui.pushButtonRecords, SIGNAL(clicked()), this, SLOT(msgRecords()));
 }
 
 void MainWidget::updateShowList(QString msg)
 {
 	//更新消息显示
 	//处理msg格式
-	QStringList list = msg.split("&");
+	QStringList list = msg.split(SPLIT);
 	int fid = (list[1].split("="))[1].toInt();
 	int tid = (list[2].split("="))[1].toInt();
 	//qDebug() << "fid:" << fid << " tid:" << tid;
@@ -206,13 +223,10 @@ void MainWidget::updateShowList(QString msg)
 	QDateTime curDateTime = QDateTime::currentDateTime();
     QString curDate = curDateTime.toString("yyyy-MM-dd hh:mm:ss");
     QString dealcurDate = curDateTime.toString("yyyy-MM-ddThh:mm:ss");
-	QString image;
 	if (fid == user_uid)
 	{
-        //发出消息
-		image = user_url;
         //添加到message_map
-        message_map[tid].insert(0, Message(fid, tid, curDate, image, data));
+        message_map[tid].insert(0, Message(fid, tid, curDate, user_url, data));
         userinfo_map[tid].content = data;
         userinfo_map[tid].msg_date = curDate;
         //对发送消息的friend进行移动到第一个位置
@@ -235,7 +249,7 @@ void MainWidget::updateShowList(QString msg)
         //添加时间消息
         dealMessageTime(dealcurDate);
         //添加消息
-        MsgFrom* mf = new MsgFrom(image,ui.listWidgetShow);
+        MsgFrom* mf = new MsgFrom(user_url,ui.listWidgetShow);
         mf->setFixedWidth(ui.listWidgetShow->width());
         QSize size = mf->fontRect(data);
         QListWidgetItem* pItem = new QListWidgetItem();
@@ -249,21 +263,86 @@ void MainWidget::updateShowList(QString msg)
 	{
         //接收消息
         //添加到message_map
-        image = userinfo_map[fid].image;
-        message_map[fid].insert(0, Message(fid, tid, curDate, image, data));
+        message_map[fid].insert(0, Message(fid, tid, curDate, userinfo_map[fid].image, data));
         userinfo_map[fid].content = data;
         userinfo_map[fid].msg_date = curDate;
         //获取当前选中的item
         QListWidgetItem* item = ui.listWidget->currentItem();
-        QWidget* itWidget = ui.listWidget->itemWidget(item);
-        int selectId = 0;
-        if (itWidget)
+        //当前用户选中了联系人
+        if (item != nullptr)
         {
-            QLabel* label_id = itWidget->findChild<QLabel*>("label_uid");
-            selectId = label_id->text().toInt();
+            qDebug() << "item != nullptr";
+            QWidget* itWidget = ui.listWidget->itemWidget(item);
+            int selectId = 0;
+            if (itWidget)
+            {
+                QLabel* label_id = itWidget->findChild<QLabel*>("label_uid");
+                selectId = label_id->text().toInt();
+            }
+
+            if (fid != selectId)
+            {
+                qDebug() << "fid != selectId";
+                for (int j = 0; j < ui.listWidget->count(); ++j)
+                {
+                    QListWidgetItem* pItem = ui.listWidget->item(j);
+                    QWidget* itWidget = ui.listWidget->itemWidget(pItem);
+                    QLabel* label_uid = itWidget->findChild<QLabel*>("label_uid");
+                    if (fid == label_uid->text().toInt())
+                    {
+                        int unread_count = 0;
+                        chatFrom* temp_cf = qobject_cast<chatFrom*>(itWidget);
+                        if (temp_cf != nullptr)
+                        {
+                            unread_count = temp_cf->getCount();
+                        }
+                        else
+                        {
+                            qDebug() << "qobject_cast<chatFrom*>转化失败";
+                        }
+                        //delete temp_cf;
+                        QLabel* label_name = itWidget->findChild<QLabel*>("label_name");
+                        chatFrom* cf = new chatFrom(fid, ":/img/image/" + userinfo_map[fid].image, label_name->text(), curDate, data);
+                        cf->setCount(unread_count + 1);
+                        QListWidgetItem* frined_Item = new QListWidgetItem();
+                        ui.listWidget->insertItem(0, frined_Item);
+                        frined_Item->setSizeHint(QSize(350, 70));
+                        ui.listWidget->setItemWidget(frined_Item, cf);
+                        delete pItem;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                QString friend_name;
+                if (itWidget)
+                {
+                    QLabel* label_name = itWidget->findChild<QLabel*>("label_name");
+                    friend_name = label_name->text();
+                }
+                chatFrom* cf = new chatFrom(fid, ":/img/image/" + userinfo_map[fid].image, friend_name, curDate, data);
+                QListWidgetItem* frined_Item = new QListWidgetItem();
+                ui.listWidget->insertItem(0, frined_Item);
+                frined_Item->setSizeHint(QSize(240, 70));
+                ui.listWidget->setItemWidget(frined_Item, cf);
+                ui.listWidget->setCurrentRow(0);
+                delete item;
+                //添加时间消息
+                dealMessageTime(dealcurDate);
+                //添加消息
+                MsgFrom* mf = new MsgFrom(userinfo_map[fid].image, ui.listWidgetShow);
+                mf->setFixedWidth(ui.listWidgetShow->width());
+                QSize size = mf->fontRect(data);
+                QListWidgetItem* pItem = new QListWidgetItem();
+                pItem->setFlags(pItem->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
+                ui.listWidgetShow->addItem(pItem);
+                pItem->setSizeHint(size);
+                mf->setText(data, curDate, size, MsgFrom::User_Other);
+                ui.listWidgetShow->setItemWidget(pItem, mf);
+            }
         }
-        //找到发出消息的friend 如果当前选中的friend是发送的,Item创建新的item插入第一行并删除原来的item
-        if (fid != selectId)
+        else//当前用户未选中了联系人
         {
             for (int j = 0; j < ui.listWidget->count(); ++j)
             {
@@ -272,8 +351,21 @@ void MainWidget::updateShowList(QString msg)
                 QLabel* label_uid = itWidget->findChild<QLabel*>("label_uid");
                 if (fid == label_uid->text().toInt())
                 {
+                    int unread_count = 0;
+                    qDebug() << "qobject_cast<chatFrom*>";
+                    chatFrom* temp_cf = qobject_cast<chatFrom*>(itWidget);
+                    if (temp_cf != nullptr)
+                    {
+                        unread_count = temp_cf->getCount();
+                    }
+                    else
+                    {
+                        qDebug() << "qobject_cast<chatFrom*>转化失败";
+                    }
+                    //delete temp_cf;
                     QLabel* label_name = itWidget->findChild<QLabel*>("label_name");
                     chatFrom* cf = new chatFrom(fid, ":/img/image/" + userinfo_map[fid].image, label_name->text(), curDate, data);
+                    cf->setCount(unread_count + 1);
                     QListWidgetItem* frined_Item = new QListWidgetItem();
                     ui.listWidget->insertItem(0, frined_Item);
                     frined_Item->setSizeHint(QSize(350, 70));
@@ -283,39 +375,31 @@ void MainWidget::updateShowList(QString msg)
                 }
             }
         }
-        else
-        {
-            QString friend_name;
-            if (itWidget)
-            {
-                QLabel* label_name = itWidget->findChild<QLabel*>("label_name");
-                friend_name = label_name->text();
-            }
-            chatFrom* cf = new chatFrom(fid, ":/img/image/" + userinfo_map[fid].image, friend_name, curDate, data);
-            QListWidgetItem* frined_Item = new QListWidgetItem();
-            ui.listWidget->insertItem(0, frined_Item);
-            frined_Item->setSizeHint(QSize(240, 70));
-            ui.listWidget->setItemWidget(frined_Item, cf);
-            ui.listWidget->setCurrentRow(0);
-            delete item;
-            //添加时间消息
-            dealMessageTime(dealcurDate);
-            //添加消息
-            MsgFrom* mf = new MsgFrom(image, ui.listWidgetShow);
-            mf->setFixedWidth(ui.listWidgetShow->width());
-            QSize size = mf->fontRect(data);
-            QListWidgetItem* pItem = new QListWidgetItem();
-            pItem->setFlags(pItem->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
-            ui.listWidgetShow->addItem(pItem);
-            pItem->setSizeHint(size);
-            mf->setText(data, curDate, size, MsgFrom::User_Other);
-            ui.listWidgetShow->setItemWidget(pItem, mf);
-        }
-
 	}
     //设置滑动到最下方
     ui.listWidgetShow->setCurrentRow(ui.listWidgetShow->count() - 1);
     this->update();
+}
+void MainWidget::selectExpression()
+{
+}
+void MainWidget::selectFile()
+{
+    // 弹出文件选择窗口
+    QString fileName = QFileDialog::getOpenFileName(this, "选择文件", QString(), "所有文件 (*.*)");
+    //fileName为文件(带路径)
+    if (fileName.isEmpty()) {
+        return;
+    }
+    //m_fileName = fileName;
+    //m_fileLabel->setText(m_fileName);
+    qDebug() << fileName;
+}
+void MainWidget::screenCut()
+{
+}
+void MainWidget::msgRecords()
+{
 }
 void MainWidget::rcvLogin(int uid, QString url, QMap<int, userInfo>userinfo, QMap<int, QList<Message>>  message)
 {
@@ -448,6 +532,9 @@ void MainWidget::selectListWidgetItem(QListWidgetItem* item)
     if (item)
     {
         QWidget* itWidget = ui.listWidget->itemWidget(item);
+        //已读消息
+        chatFrom* cf = static_cast<chatFrom*>(itWidget);
+        cf->have_read();
         if (itWidget)
         {
             QLabel* label_date = itWidget->findChild<QLabel*>("label_date");
@@ -472,6 +559,7 @@ void MainWidget::selectListWidgetItem(QListWidgetItem* item)
         for (int i = messageList.size() - 1; i >= 0; --i)
         {
             QString img_url;
+            //判断消息的发送方
             MsgFrom::User_Type type;
             if (messageList[i].from_id == user_uid)
             {
@@ -496,11 +584,10 @@ void MainWidget::selectListWidgetItem(QListWidgetItem* item)
         }
     }
     //5.信息listwidget滑动到最下方
-    //ui.listWidgetShow->scrollToBottom();
-
     ui.listWidgetShow->setCurrentRow(ui.listWidgetShow->count() - 1);
+
     //6.改变发送人
-    send_client->changeToId(user_uid, checked_uid);
+    send_id = checked_uid;
 }
 
 
@@ -520,14 +607,50 @@ void MainWidget::mouseMoveEvent(QMouseEvent* event)
         this->move(event->pos() - curPos + this->pos());    //窗口移动
     }
 }
-
 //鼠标释放
 void MainWidget::mouseReleaseEvent(QMouseEvent* event)
 {
     isPressed = false;
 }
 
+void MainWidget::sendMsg()
+{
+    //处理发送数据
+    QString data = textedit->toPlainText();
+    if (data != nullptr)
+    {
+        QString fid_str = "type=2&from=" + QString::number(user_uid);
+        QString tid_str = "to=" + QString::number(send_id);
 
+        //data = fid_str + "&" + tid_str + "&" + data;
+        QString newData = QString("type=2%1from=%2%1to=%3%1%4").arg(SPLIT).arg(user_uid).arg(send_id).arg(data);
+        LoginWidget::socket->write(newData.toUtf8());
+        textedit->setText("");
+        //发送信号 进行格式处理 带有from_id 和 to_id
+        qDebug() << "newData:" << newData;
+        updateShowList(newData);
+    }
+    else
+    {
+
+        emptyMsgLabel->show();
+        QTimer::singleShot(2000, this, &MainWidget::hideLabel);
+    }
+}
+void MainWidget::hideLabel()
+{
+    emptyMsgLabel->hide();
+}
+
+void MainWidget::recvMsg()
+{
+    //处理连接后操作
+    QByteArray arr = LoginWidget::socket->readAll();
+    //    arr.data();
+    QString data = arr.data();
+    qDebug() << "recvMsg:" + data;
+    updateShowList(data);
+}
 
 void MainWidget::selectToolButton(QToolButton* toolButton)
 {

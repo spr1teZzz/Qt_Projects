@@ -53,7 +53,7 @@ void LoginWidget::btn_login()
     //连接服务器校验登录
     QString username = ui->LineEdit_username->text();
     QString password = ui->LineEdit_password->text();
-    QString login_msg = "type=1&username=" + username + "&password=" + password;
+    QString login_msg = QString("type=1%1username=%2%1password=%3").arg(SPLIT).arg(username).arg(password);
     LoginWidget::socket->write(login_msg.toUtf8());
 }
 

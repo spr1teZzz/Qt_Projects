@@ -55,5 +55,6 @@
     </qresource>
     <qresource prefix="/qss">
         <file>scrollbar.qss</file>
+        <file>QTextEdit_scrollbar.qss</file>
     </qresource>
 </RCC>

@@ -21,6 +21,7 @@
 #include <QFile>
 #include "ui_loginwidget.h"
 
+#define SPLIT "@SPRITE@"
 class userInfo
 {
 public:

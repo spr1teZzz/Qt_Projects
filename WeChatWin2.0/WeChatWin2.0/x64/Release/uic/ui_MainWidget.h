@@ -60,6 +60,7 @@ public:
     QPushButton *pushButtonShot;
     QPushButton *pushButtonRecords;
     QListWidget *listWidgetShow;
+    QPushButton *pushButtonSend;
     QWidget *pageAddressBook;
     QListView *listView_2;
     QWidget *pageCollect;
@@ -161,7 +162,7 @@ public:
 ""));
         widgetToolBar = new QWidget(pageChat);
         widgetToolBar->setObjectName(QStringLiteral("widgetToolBar"));
-        widgetToolBar->setGeometry(QRect(274, 410, 610, 40));
+        widgetToolBar->setGeometry(QRect(274, 400, 610, 40));
         pushButtonExpression = new QPushButton(widgetToolBar);
         pushButtonExpression->setObjectName(QStringLiteral("pushButtonExpression"));
         pushButtonExpression->setGeometry(QRect(30, 15, 20, 20));
@@ -176,7 +177,17 @@ public:
         pushButtonRecords->setGeometry(QRect(120, 15, 20, 20));
         listWidgetShow = new QListWidget(pageChat);
         listWidgetShow->setObjectName(QStringLiteral("listWidgetShow"));
-        listWidgetShow->setGeometry(QRect(269, 0, 620, 410));
+        listWidgetShow->setGeometry(QRect(269, 0, 620, 401));
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(listWidgetShow->sizePolicy().hasHeightForWidth());
+        listWidgetShow->setSizePolicy(sizePolicy);
+        listWidgetShow->setFocusPolicy(Qt::StrongFocus);
+        listWidgetShow->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        pushButtonSend = new QPushButton(pageChat);
+        pushButtonSend->setObjectName(QStringLiteral("pushButtonSend"));
+        pushButtonSend->setGeometry(QRect(740, 590, 91, 41));
         stackedWidget->addWidget(pageChat);
         pageAddressBook = new QWidget();
         pageAddressBook->setObjectName(QStringLiteral("pageAddressBook"));
@@ -237,6 +248,7 @@ public:
         pushButtonFile->setText(QString());
         pushButtonShot->setText(QString());
         pushButtonRecords->setText(QString());
+        pushButtonSend->setText(QApplication::translate("MainWidgetClass", "\345\217\221\351\200\201", 0));
     } // retranslateUi
 
 };

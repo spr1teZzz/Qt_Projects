@@ -84,6 +84,7 @@
     <ClCompile Include="filemanager.cpp" />
     <ClCompile Include="loginwidget.cpp" />
     <ClCompile Include="MsgFrom.cpp" />
+    <ClCompile Include="mytextedit.cpp" />
     <ClCompile Include="textlabel.cpp" />
     <QtRcc Include="MainWidget.qrc" />
     <QtRcc Include="res.qrc" />
@@ -114,6 +115,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="textlabel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="mytextedit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

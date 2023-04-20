@@ -61,6 +61,9 @@
     <ClCompile Include="textlabel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mytextedit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="chatFrom.h">
@@ -79,6 +82,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="textlabel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="mytextedit.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

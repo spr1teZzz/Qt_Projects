@@ -38,9 +38,68 @@ chatFrom::chatFrom(int uid, QString image, QString username, QString date, QStri
 	}
 	ui.label_date->setText(date);
 	ui.label_date->setStyleSheet("background-color: transparent;border:none;");
+
+	//设置未读消息label
+	unread_count = 0;
+	label_unread = new QLabel(ui.label_image);
+	label_unread->resize(20, 20);
+	label_unread->setAlignment(Qt::AlignRight);
+	label_unread->move(ui.label_image->width() - label_unread->width(), 0);
+	QPixmap pix(20, 20);
+	pix.fill(Qt::transparent);
+	QPainter painter(&pix);
+	painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);//消锯齿
+	painter.setPen(Qt::transparent);
+	painter.setBrush(Qt::red);
+	painter.drawEllipse(pix.rect());
+	QTextOption textop;
+	textop.setAlignment(Qt::AlignCenter);
+	painter.setPen(Qt::white);
+	painter.drawText(pix.rect(), QString::number(unread_count), textop);
+	label_unread->setPixmap(pix);
+	if (unread_count > 0)
+	{
+		label_unread->show();
+	}
+	else
+	{
+		label_unread->hide();
+	}
 }
 
 chatFrom::~chatFrom()
 {
 
+}
+
+void chatFrom::setCount(int count)
+{
+	 unread_count = count;
+	 if (unread_count > 0)
+	 {
+		 QPixmap pix(20, 20);
+		 pix.fill(Qt::transparent);
+		 QPainter painter(&pix);
+		 painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);//消锯齿
+		 painter.setPen(Qt::transparent);
+		 painter.setBrush(Qt::red);
+		 painter.drawEllipse(pix.rect());
+		 QTextOption textop;
+		 textop.setAlignment(Qt::AlignCenter);
+		 painter.setPen(Qt::white);
+		 painter.drawText(pix.rect(), QString::number(unread_count), textop);
+		 label_unread->setPixmap(pix);
+		 label_unread->show();
+	 }
+}
+
+int chatFrom::getCount()
+{
+	return unread_count;
+}
+
+void chatFrom::have_read()
+{
+	unread_count = 0;
+	label_unread->hide();
 }

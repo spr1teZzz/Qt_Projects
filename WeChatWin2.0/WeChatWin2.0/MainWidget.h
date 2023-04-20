@@ -5,6 +5,7 @@
 #include "chatFrom.h"
 #include "loginwidget.h"
 #include "MsgFrom.h"
+#include "mytextedit.h"
 #include <qdebug.h>
 #include <QString>
 #include <QTextCodec>
@@ -20,6 +21,8 @@
 #include <QVector>
 #include <QScrollBar>
 #include <QMouseEvent>
+#include <QFileDialog>
+#include <QTimer>
 class MainWidget : public QWidget
 {
     Q_OBJECT
@@ -35,11 +38,21 @@ public:
 	QPoint curPos;
 	bool isPressed;
 	bool isMaxWin;
+	MyTextEdit* textedit;
+	QLabel* emptyMsgLabel;
 signals:
-    void closeLoginWindow();
+	void closeLoginWindow();
 public slots:
     void rcvLogin(int, QString, QMap<int, userInfo>, QMap<int, QList<Message>>);
     void updateShowList(QString);
+	void sendMsg();
+	void recvMsg();
+	void hideLabel();
+	//聊天功能
+	void selectExpression();//表情
+	void selectFile();//选择文件发送
+	void screenCut();//截屏
+	void msgRecords();//消息记录
 
 	void slotToolButtonChat();
 	void slotToolButtonAddressBook();
@@ -60,26 +73,13 @@ public slots:
 private:
     Ui::MainWidgetClass ui;
 	int label_uid;
+	int send_id;//发送对象id
     void initForm();
     void signalSlotConnect();
     void selectToolButton(QToolButton* toolButton);
 	void mousePressEvent(QMouseEvent* event);
 	void mouseMoveEvent(QMouseEvent* event);
 	void mouseReleaseEvent(QMouseEvent* event);
-
 	void dealMessageTime(QString curMsgTime);
 };
 
-//class listwidgetItem :public QListWidgetItem
-//{
-//public:
-//	bool operator<(const QListWidgetItem& other) const
-//	{
-//		QWidget* Widget = ui.listWidget->itemWidget(this);
-//		QLabel* label_name = Widget->findChild<QLabel*>("label_name");
-//		double a, b;
-//		a = this->data(Qt::UserRole).toDouble();
-//		b = other.data(Qt::UserRole).toDouble();
-//		return a < b;
-//	}
-//};
