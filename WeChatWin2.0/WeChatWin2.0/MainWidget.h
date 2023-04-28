@@ -23,29 +23,40 @@
 #include <QMouseEvent>
 #include <QFileDialog>
 #include <QTimer>
+#include <QFileIconProvider>
+#include <QPainter>
+#include <QDataStream>
 class MainWidget : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    MainWidget(QWidget *parent = nullptr);
-    ~MainWidget();
-    QMap<int, userInfo> userinfo_map;
-    QMap<int, QList<Message>> message_map;
-    int user_uid;
-    QString user_url;
-    Client *send_client;
+	MainWidget(QWidget* parent = nullptr);
+	~MainWidget();
+	QMap<int, userInfo> userinfo_map;
+	QMap<int, QList<Message>> message_map;
+	int user_uid;
+	QString user_url;
+	Client* send_client;
 	QPoint curPos;
 	bool isPressed;
 	bool isMaxWin;
 	MyTextEdit* textedit;
 	QLabel* emptyMsgLabel;
+	enum FILETYPE {
+		FILE,
+		IMAGE,
+		TEXT,
+		OTHERDATA
+	};
 signals:
 	void closeLoginWindow();
 public slots:
-    void rcvLogin(int, QString, QMap<int, userInfo>, QMap<int, QList<Message>>);
-    void updateShowList(QString);
+	void rcvLogin(int, QString, QMap<int, userInfo>, QMap<int, QList<Message>>);
+	void updateShowList(QString);
+	void updateShowList(int, int, QString);
 	void sendMsg();
+	void deal_remindData(QByteArray data);
 	void recvMsg();
 	void hideLabel();
 	//聊天功能
@@ -53,6 +64,8 @@ public slots:
 	void selectFile();//选择文件发送
 	void screenCut();//截屏
 	void msgRecords();//消息记录
+
+	void onSocketError(QAbstractSocket::SocketError error);
 
 	void slotToolButtonChat();
 	void slotToolButtonAddressBook();
@@ -71,15 +84,26 @@ public slots:
 	void topWindow();
 	void selectListWidgetItem(QListWidgetItem* item);
 private:
-    Ui::MainWidgetClass ui;
+	Ui::MainWidgetClass ui;
 	int label_uid;
 	int send_id;//发送对象id
-    void initForm();
-    void signalSlotConnect();
-    void selectToolButton(QToolButton* toolButton);
+	bool select_file_flag;
+	//后期如果要发送多个文件，可以用容器
+	QString send_file_name;
+	QString fileName;
+	qint64 fileSize;
+	qint64 recvSize;//当前接收文件的大小
+	QByteArray filebuf;//当前接收的文件数据
+	FILETYPE fileType;
+	int recv_msg_fid;//接收信息发送者id
+	//QDataStream m_inStream;
+	void initForm();
+	void signalSlotConnect();
+	void selectToolButton(QToolButton* toolButton);
 	void mousePressEvent(QMouseEvent* event);
 	void mouseMoveEvent(QMouseEvent* event);
 	void mouseReleaseEvent(QMouseEvent* event);
 	void dealMessageTime(QString curMsgTime);
+	void paintFile(QString path);
 };
-
+ 

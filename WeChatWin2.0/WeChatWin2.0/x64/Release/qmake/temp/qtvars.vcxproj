@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|Win32&apos;">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\sprite\AppData\Local\Temp\2gh402yi.btv;D:\QT\5.6\msvc2015_64\include;D:\QT\5.6\msvc2015_64\include\QtWidgets;D:\QT\5.6\msvc2015_64\include\QtGui;D:\QT\5.6\msvc2015_64\include\QtANGLE;D:\QT\5.6\msvc2015_64\include\QtNetwork;D:\QT\5.6\msvc2015_64\include\QtSql;D:\QT\5.6\msvc2015_64\include\QtCore;C:\Users\sprite\AppData\Local\Temp\2gh402yi.btv;D:\QT\5.6\msvc2015_64\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\sprite\AppData\Local\Temp\otvchabt.l03;D:\QT\5.6\msvc2015_64\include;D:\QT\5.6\msvc2015_64\include\QtWidgets;D:\QT\5.6\msvc2015_64\include\QtGui;D:\QT\5.6\msvc2015_64\include\QtANGLE;D:\QT\5.6\msvc2015_64\include\QtNetwork;D:\QT\5.6\msvc2015_64\include\QtSql;D:\QT\5.6\msvc2015_64\include\QtCore;C:\Users\sprite\AppData\Local\Temp\otvchabt.l03;D:\QT\5.6\msvc2015_64\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-FS -Zc:strictStrings -Zc:throwingNew %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>.\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>

@@ -10,6 +10,8 @@
 #include <QMovie>
 #include <QPainter>
 #include <QDateTime>
+#include <QDir>
+#include <QFileIconProvider>
 #include "textlabel.h"
 class MsgFrom  : public QWidget
 {

@@ -1,13 +1,20 @@
 #pragma once
-
 #include <QTcpServer>
 #include "MyThread.h"
 #include <QThread>
 #include <QTcpSocket>
 #include <QDebug>
+#include <QDataStream>
 #include "mysocket.h"
 #include "ui_Widget.h"
 #include "Widget.h"
+#include <QDir>
+#include <QBuffer>
+#define SPLIT "@SPRITE@"
+#define SE_IMAGE "@IMAGE@"
+#define SE_FILE "@FILE@"
+#define SE_TEXT "@TEXT@"
+
 class Widget;
 class MyServer;
 

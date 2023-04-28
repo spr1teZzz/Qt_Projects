@@ -113,7 +113,7 @@ public:
         toolButtonProgram->setGeometry(QRect(0, 590, 55, 40));
         widget = new QWidget(MainWidgetClass);
         widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(50, 0, 885, 70));
+        widget->setGeometry(QRect(50, 0, 891, 70));
         pushButtonClose = new QPushButton(widget);
         pushButtonClose->setObjectName(QStringLiteral("pushButtonClose"));
         pushButtonClose->setGeometry(QRect(855, 0, 30, 25));
@@ -177,7 +177,7 @@ public:
         pushButtonRecords->setGeometry(QRect(120, 15, 20, 20));
         listWidgetShow = new QListWidget(pageChat);
         listWidgetShow->setObjectName(QStringLiteral("listWidgetShow"));
-        listWidgetShow->setGeometry(QRect(269, 0, 620, 401));
+        listWidgetShow->setGeometry(QRect(270, 0, 621, 401));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);

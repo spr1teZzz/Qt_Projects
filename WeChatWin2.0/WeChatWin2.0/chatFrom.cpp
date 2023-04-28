@@ -1,4 +1,7 @@
 #include "chatFrom.h"
+#define SE_IMAGE "@IMAGE@"
+#define SE_FILE "@FILE@"
+#define SE_TEXT "@TEXT@"
 
 chatFrom::chatFrom(int uid, QString image, QString username, QString date, QString msg, QWidget *parent)
 	: QWidget(parent)
@@ -13,10 +16,27 @@ chatFrom::chatFrom(int uid, QString image, QString username, QString date, QStri
 	ui.label_name->setStyleSheet("background-color:transparent;border:none;");
 	ui.label_name->setText(username);
 
+	//判断msg的类型
 	//字符串省略处理
-	QFontMetrics fontWidth(ui.label_msg->font());//得到每个字符的宽度
-	QString elideNote = fontWidth.elidedText(msg, Qt::ElideRight, 120);//最大宽度120像素
-	ui.label_msg->setText(elideNote);//显示省略好的字符串
+
+	if (msg.startsWith(SE_TEXT))
+	{
+		msg = msg.mid(6);
+		QFontMetrics fontWidth(ui.label_msg->font());//得到每个字符的宽度
+		QString elideNote=fontWidth.elidedText(msg, Qt::ElideRight, 120);//最大宽度120像素
+		ui.label_msg->setText(elideNote);
+	}
+	else if (msg.startsWith(SE_FILE))
+	{
+		//文件处理
+		ui.label_msg->setText("[文件]");
+	}
+	else if (msg.startsWith(SE_IMAGE))
+	{
+		//图片处理
+		ui.label_msg->setText("[图片]");
+	}
+	
 	ui.label_msg->setStyleSheet("background-color: transparent;border:none;");
 	
 	//时间处理

@@ -1,2 +1,5 @@
-﻿  MySocket.cpp
+﻿  MyServer.cpp
+  moc_MyServer.cpp
+  moc_MySocket.cpp
+  moc_Widget.cpp
   WeChatServer.vcxproj -> D:\Qt_projects\WeChatServer3.0\x64\Release\WeChatServer.exe

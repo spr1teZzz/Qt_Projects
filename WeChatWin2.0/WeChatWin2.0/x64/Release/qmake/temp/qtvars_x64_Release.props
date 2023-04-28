@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
 <Qt_DEFINES_>_WINDOWS;UNICODE;WIN32;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_SQL_LIB;QT_CORE_LIB;NDEBUG</Qt_DEFINES_>
-<Qt_INCLUDEPATH_>C:\Users\sprite\AppData\Local\Temp\2gh402yi.btv;D:\QT\5.6\msvc2015_64\include;D:\QT\5.6\msvc2015_64\include\QtWidgets;D:\QT\5.6\msvc2015_64\include\QtGui;D:\QT\5.6\msvc2015_64\include\QtANGLE;D:\QT\5.6\msvc2015_64\include\QtNetwork;D:\QT\5.6\msvc2015_64\include\QtSql;D:\QT\5.6\msvc2015_64\include\QtCore;C:\Users\sprite\AppData\Local\Temp\2gh402yi.btv;D:\QT\5.6\msvc2015_64\mkspecs\win32-msvc2015</Qt_INCLUDEPATH_>
+<Qt_INCLUDEPATH_>C:\Users\sprite\AppData\Local\Temp\otvchabt.l03;D:\QT\5.6\msvc2015_64\include;D:\QT\5.6\msvc2015_64\include\QtWidgets;D:\QT\5.6\msvc2015_64\include\QtGui;D:\QT\5.6\msvc2015_64\include\QtANGLE;D:\QT\5.6\msvc2015_64\include\QtNetwork;D:\QT\5.6\msvc2015_64\include\QtSql;D:\QT\5.6\msvc2015_64\include\QtCore;C:\Users\sprite\AppData\Local\Temp\otvchabt.l03;D:\QT\5.6\msvc2015_64\mkspecs\win32-msvc2015</Qt_INCLUDEPATH_>
 <Qt_STDCPP_></Qt_STDCPP_>
 <Qt_RUNTIME_>MultiThreadedDLL</Qt_RUNTIME_>
 <Qt_CL_OPTIONS_>-FS -Zc:strictStrings -Zc:throwingNew</Qt_CL_OPTIONS_>

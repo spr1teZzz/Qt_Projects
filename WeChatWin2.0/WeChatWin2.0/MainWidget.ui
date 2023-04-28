@@ -171,7 +171,7 @@
     <rect>
      <x>50</x>
      <y>0</y>
-     <width>885</width>
+     <width>891</width>
      <height>70</height>
     </rect>
    </property>
@@ -418,9 +418,9 @@ QListWidget::item:selected{background:#C8C7C6; border:none;    margin:0px,0px,0p
     <widget class="QListWidget" name="listWidgetShow">
      <property name="geometry">
       <rect>
-       <x>269</x>
+       <x>270</x>
        <y>0</y>
-       <width>620</width>
+       <width>621</width>
        <height>401</height>
       </rect>
      </property>

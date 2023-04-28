@@ -1,6 +1,6 @@
 #include "loginwidget.h"
 #define PORT 8888
-#define IP "192.168.5.94"
+#define IP "192.168.1.2"
 
 QTcpSocket* LoginWidget::socket = new QTcpSocket();
 LoginWidget::LoginWidget(QWidget *parent)

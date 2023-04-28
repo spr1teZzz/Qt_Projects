@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Release|x64">
+    <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
+      <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -12,7 +12,7 @@
     <Keyword>Qt4VSv1.0</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;" Label="Configuration">
+  <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|Win32&apos;" Label="Configuration">
     <OutputDirectory>.\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
     <CharacterSet>NotSet</CharacterSet>
@@ -20,25 +20,25 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
-  <ImportGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;" Label="PropertySheets">
+  <ImportGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|Win32&apos;" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists(&apos;$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props&apos;)" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <OutDir Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">.\</OutDir>
-    <IgnoreImportLibrary Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">true</IgnoreImportLibrary>
-    <LinkIncremental Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">false</LinkIncremental>
+    <OutDir Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|Win32&apos;">.\</OutDir>
+    <IgnoreImportLibrary Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|Win32&apos;">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|Win32&apos;">false</LinkIncremental>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">
+  <ItemDefinitionGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|Win32&apos;">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\sprite\AppData\Local\Temp\eipf0uqb.1bw;D:\QT\5.6\msvc2015_64\include;D:\QT\5.6\msvc2015_64\include\QtWidgets;D:\QT\5.6\msvc2015_64\include\QtGui;D:\QT\5.6\msvc2015_64\include\QtANGLE;D:\QT\5.6\msvc2015_64\include\QtSql;D:\QT\5.6\msvc2015_64\include\QtNetwork;D:\QT\5.6\msvc2015_64\include\QtCore;C:\Users\sprite\AppData\Local\Temp\eipf0uqb.1bw;D:\QT\5.6\msvc2015_64\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\sprite\AppData\Local\Temp\bpny55i0.mkl;D:\QT\5.6\msvc2015_64\include;D:\QT\5.6\msvc2015_64\include\QtWidgets;D:\QT\5.6\msvc2015_64\include\QtGui;D:\QT\5.6\msvc2015_64\include\QtANGLE;D:\QT\5.6\msvc2015_64\include\QtSql;D:\QT\5.6\msvc2015_64\include\QtNetwork;D:\QT\5.6\msvc2015_64\include\QtCore;C:\Users\sprite\AppData\Local\Temp\bpny55i0.mkl;D:\QT\5.6\msvc2015_64\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-FS -Zc:strictStrings -Zc:throwingNew %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>.\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ObjectFileName>.\</ObjectFileName>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;WIN64;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -65,7 +65,7 @@
       <WarningLevel>0</WarningLevel>
     </Midl>
     <ResourceCompile>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;WIN64;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
