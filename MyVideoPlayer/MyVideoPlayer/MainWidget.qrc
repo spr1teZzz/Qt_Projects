@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/MainWidget"/>
+    <qresource prefix="/icon">
+        <file>img/disc.png</file>
+        <file>img/file.png</file>
+        <file>img/folder.png</file>
+        <file>img/next.png</file>
+        <file>img/pause.png</file>
+        <file>img/play.png</file>
+        <file>img/close.png</file>
+        <file>img/max.png</file>
+        <file>img/min.png</file>
+        <file>img/last.png</file>
+        <file>img/openFile.png</file>
+        <file>img/volumeClose.png</file>
+        <file>img/volumeOpen.png</file>
+        <file>img/playerIcon.png</file>
+    </qresource>
+</RCC>
