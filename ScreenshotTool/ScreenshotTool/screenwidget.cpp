@@ -302,7 +302,8 @@ void ScreenWidget::saveFullOther()
 void ScreenWidget::quit()
 {
     screen->setStatus(Screen::SELECT);
-    this->hide();
+    emit mainShow_signal();
+    this->close();
 }
 
 void ScreenWidget::mouseMoveEvent(QMouseEvent* e)
@@ -373,7 +374,8 @@ void ScreenWidget::keyPressEvent(QKeyEvent* event)
     //截图和采色只能监视一个
     if (event->key() == Qt::Key_Escape) {
         screen->setStatus(Screen::SELECT);
-        this->hide();
+        this->close();
+        emit mainShow_signal();
     }
 }
 

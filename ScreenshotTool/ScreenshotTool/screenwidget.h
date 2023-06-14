@@ -87,7 +87,7 @@ private:
 
 signals:
     void colorwidget_signal();
-
+    void mainShow_signal();
 protected:
     void contextMenuEvent(QContextMenuEvent*);
     void mousePressEvent(QMouseEvent*);

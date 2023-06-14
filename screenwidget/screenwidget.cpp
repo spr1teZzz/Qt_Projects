@@ -176,7 +176,7 @@ ScreenWidget::ScreenWidget(QWidget *parent) : QWidget(parent)
     menu->addAction("保存全屏截图", this, SLOT(saveFullScreen()));
     menu->addAction("截图另存为", this, SLOT(saveScreenOther()));
     menu->addAction("全屏另存为", this, SLOT(saveFullOther()));
-    menu->addAction("退出截图", this, SLOT(hide()));
+    menu->addAction("退出截图", this, SLOT(quit()));
 
     //取得屏幕大小
     screen = new Screen(deskGeometry.size());
@@ -186,26 +186,24 @@ ScreenWidget::ScreenWidget(QWidget *parent) : QWidget(parent)
 
 void ScreenWidget::paintEvent(QPaintEvent *)
 {
+    qDebug()<<"paintEvent";
     int x = screen->getLeftUp().x();
     int y = screen->getLeftUp().y();
     int w = screen->getRightDown().x() - x;
     int h = screen->getRightDown().y() - y;
 
     QPainter painter(this);
-
     QPen pen;
     pen.setColor(Qt::green);
     pen.setWidth(2);
     pen.setStyle(Qt::DotLine);
     painter.setPen(pen);
     painter.drawPixmap(0, 0, *bgScreen);
-
     if (w != 0 && h != 0) {
         painter.drawPixmap(x, y, fullScreen->copy(x, y, w, h));
     }
 
     painter.drawRect(x, y, w, h);
-
     pen.setColor(Qt::yellow);
     painter.setPen(pen);
     painter.drawText(x + 2, y - 8, tr("截图范围：( %1 x %2 ) - ( %3 x %4 )  图片大小：( %5 x %6 )")
@@ -214,10 +212,10 @@ void ScreenWidget::paintEvent(QPaintEvent *)
 
 void ScreenWidget::showEvent(QShowEvent *)
 {
+    qDebug()<<"showEvent";
     QPoint point(-1, -1);
     screen->setStart(point);
     screen->setEnd(point);
-
 #if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
     QScreen *pscreen = QApplication::primaryScreen();
     *fullScreen = pscreen->grabWindow(0, 0, 0, screen->width(), screen->height());
@@ -226,11 +224,13 @@ void ScreenWidget::showEvent(QShowEvent *)
 #endif
 
     //设置透明度实现模糊背景
-    QPixmap pix(screen->width(), screen->height());
-    pix.fill((QColor(160, 160, 160, 200)));
+//    QPixmap pix(screen->width(), screen->height());
+//    pix.fill((QColor(160, 160, 160, 200)));
+//    bgScreen = new QPixmap(*fullScreen);
+//    QPainter p(bgScreen);
+//    p.drawPixmap(0, 0, pix);
+
     bgScreen = new QPixmap(*fullScreen);
-    QPainter p(bgScreen);
-    p.drawPixmap(0, 0, pix);
 }
 
 void ScreenWidget::saveScreen()
@@ -298,8 +298,15 @@ void ScreenWidget::saveFullOther()
     }
 }
 
+void ScreenWidget::quit()
+{
+    screen->setStatus(Screen::SELECT);
+    this->hide();
+}
+
 void ScreenWidget::mouseMoveEvent(QMouseEvent *e)
 {
+    qDebug()<<"mouseMoveEvent:"<<screen->getStatus();
     if (screen->getStatus() == Screen::SELECT) {
         screen->setEnd(e->pos());
     } else if (screen->getStatus() == Screen::MOV) {
@@ -307,16 +314,20 @@ void ScreenWidget::mouseMoveEvent(QMouseEvent *e)
         screen->move(p);
         movPos = e->pos();
     }
-
     this->update();
 }
 
 void ScreenWidget::mousePressEvent(QMouseEvent *e)
 {
     int status = screen->getStatus();
-
+    qDebug()<<"mousePressEvent:"<<status;
     if (status == Screen::SELECT) {
         screen->setStart(e->pos());
+        //设置背景颜色改变
+        QPixmap pix(screen->width(), screen->height());
+        pix.fill((QColor(160, 160, 160, 200)));
+        QPainter p(bgScreen);
+        p.drawPixmap(0, 0, pix);
     } else if (status == Screen::MOV) {
         if (screen->isInArea(e->pos()) == false) {
             screen->setStart(e->pos());
@@ -326,13 +337,13 @@ void ScreenWidget::mousePressEvent(QMouseEvent *e)
             this->setCursor(Qt::SizeAllCursor);
         }
     }
-
     this->update();
 }
 
 void ScreenWidget::mouseReleaseEvent(QMouseEvent *)
 {
     //结束位置和起始位置未改变则全屏选中
+    qDebug()<<"mouseReleaseEvent:"<<screen->getStatus();
     if(screen->getEnd().x() == -1 && screen->getEnd().y() == -1)
     {
         screen->setStart(QPoint(0,0));
@@ -356,6 +367,7 @@ void ScreenWidget::contextMenuEvent(QContextMenuEvent *)
 void ScreenWidget::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
-       this->close();
+       screen->setStatus(Screen::SELECT);
+       this->hide();
     }
 }

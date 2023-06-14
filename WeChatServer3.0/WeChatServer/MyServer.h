@@ -43,7 +43,7 @@ public:
 
     Widget *widget;
 private:
-    void incomingConnection(qintptr socketDescriptor);
+    void incomingConnection(qintptr socketDescriptor);//有新连接到来
 public slots:
     void AddInf(MySocket* mysocket, int index,int uid);//添加信息
     void RemoveInf(MySocket* mysocket);//移除信息

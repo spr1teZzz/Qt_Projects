@@ -88,6 +88,7 @@ private slots:
     void saveFullScreen();
     void saveScreenOther();
     void saveFullOther();
+    void quit();
 };
 
 #endif // SCREENWIDGET_H

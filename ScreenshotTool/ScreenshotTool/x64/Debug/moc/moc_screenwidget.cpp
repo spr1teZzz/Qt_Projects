@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_ScreenWidget_t {
-    QByteArrayData data[8];
-    char stringdata0[94];
+    QByteArrayData data[9];
+    char stringdata0[110];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -32,16 +32,17 @@ static const qt_meta_stringdata_ScreenWidget_t qt_meta_stringdata_ScreenWidget =
 QT_MOC_LITERAL(0, 0, 12), // "ScreenWidget"
 QT_MOC_LITERAL(1, 13, 18), // "colorwidget_signal"
 QT_MOC_LITERAL(2, 32, 0), // ""
-QT_MOC_LITERAL(3, 33, 10), // "saveScreen"
-QT_MOC_LITERAL(4, 44, 14), // "saveFullScreen"
-QT_MOC_LITERAL(5, 59, 15), // "saveScreenOther"
-QT_MOC_LITERAL(6, 75, 13), // "saveFullOther"
-QT_MOC_LITERAL(7, 89, 4) // "quit"
+QT_MOC_LITERAL(3, 33, 15), // "mainShow_signal"
+QT_MOC_LITERAL(4, 49, 10), // "saveScreen"
+QT_MOC_LITERAL(5, 60, 14), // "saveFullScreen"
+QT_MOC_LITERAL(6, 75, 15), // "saveScreenOther"
+QT_MOC_LITERAL(7, 91, 13), // "saveFullOther"
+QT_MOC_LITERAL(8, 105, 4) // "quit"
 
     },
     "ScreenWidget\0colorwidget_signal\0\0"
-    "saveScreen\0saveFullScreen\0saveScreenOther\0"
-    "saveFullOther\0quit"
+    "mainShow_signal\0saveScreen\0saveFullScreen\0"
+    "saveScreenOther\0saveFullOther\0quit"
 };
 #undef QT_MOC_LITERAL
 
@@ -51,24 +52,26 @@ static const uint qt_meta_data_ScreenWidget[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       1,       // signalCount
+       2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   44,    2, 0x06 /* Public */,
+       1,    0,   49,    2, 0x06 /* Public */,
+       3,    0,   50,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       3,    0,   45,    2, 0x08 /* Private */,
-       4,    0,   46,    2, 0x08 /* Private */,
-       5,    0,   47,    2, 0x08 /* Private */,
-       6,    0,   48,    2, 0x08 /* Private */,
-       7,    0,   49,    2, 0x08 /* Private */,
+       4,    0,   51,    2, 0x08 /* Private */,
+       5,    0,   52,    2, 0x08 /* Private */,
+       6,    0,   53,    2, 0x08 /* Private */,
+       7,    0,   54,    2, 0x08 /* Private */,
+       8,    0,   55,    2, 0x08 /* Private */,
 
  // signals: parameters
+    QMetaType::Void,
     QMetaType::Void,
 
  // slots: parameters
@@ -88,11 +91,12 @@ void ScreenWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->colorwidget_signal(); break;
-        case 1: _t->saveScreen(); break;
-        case 2: _t->saveFullScreen(); break;
-        case 3: _t->saveScreenOther(); break;
-        case 4: _t->saveFullOther(); break;
-        case 5: _t->quit(); break;
+        case 1: _t->mainShow_signal(); break;
+        case 2: _t->saveScreen(); break;
+        case 3: _t->saveFullScreen(); break;
+        case 4: _t->saveScreenOther(); break;
+        case 5: _t->saveFullOther(); break;
+        case 6: _t->quit(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -102,6 +106,13 @@ void ScreenWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
             typedef void (ScreenWidget::*_t)();
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&ScreenWidget::colorwidget_signal)) {
                 *result = 0;
+                return;
+            }
+        }
+        {
+            typedef void (ScreenWidget::*_t)();
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&ScreenWidget::mainShow_signal)) {
+                *result = 1;
                 return;
             }
         }
@@ -134,13 +145,13 @@ int ScreenWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 7;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 6)
+        if (_id < 7)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 6;
+        _id -= 7;
     }
     return _id;
 }
@@ -149,5 +160,11 @@ int ScreenWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 void ScreenWidget::colorwidget_signal()
 {
     QMetaObject::activate(this, &staticMetaObject, 0, Q_NULLPTR);
+}
+
+// SIGNAL 1
+void ScreenWidget::mainShow_signal()
+{
+    QMetaObject::activate(this, &staticMetaObject, 1, Q_NULLPTR);
 }
 QT_END_MOC_NAMESPACE

@@ -43,8 +43,7 @@ void MainWidget::soltInit()
         });
     connect(ui->Btn_Max, &QPushButton::clicked, this, &MainWidget::window_max);
     connect(ui->Btn_StartAndStop, &QPushButton::clicked, this, &MainWidget::play_video);
-    connect(ui->Btn_loadFile, &QPushButton::clicked, this, &MainWidget::OnSetMediaFile);
-    
+    connect(ui->Btn_loadFile, &QPushButton::clicked, this, &MainWidget::OnSetMediaFile);  
     // Player对象的状态已经改变。
     connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(OnStateChanged(QMediaPlayer::State)));
 
@@ -57,7 +56,7 @@ void MainWidget::soltInit()
 
     //文件显示点击事件
     connect(ui->listWidget, &QListWidget::itemDoubleClicked, this, &MainWidget::onItemClicked);
-
+            
     //音量监控
     connect(ui->slider_voice, &QSlider::sliderMoved, this, &MainWidget::voice_control);
     connect(ui->Btn_voiceIcon, &QPushButton::clicked, this, &MainWidget::muteAndrecover);

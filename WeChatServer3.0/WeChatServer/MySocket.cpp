@@ -9,7 +9,7 @@
 MySocket::MySocket(QObject *parent)
 {
 	fileSize = 0;
-	recvSize = 0;//当前接收文件的大小
+	recvSize = 0;
 	this->m_tcpServer = static_cast<MyServer*>(parent);
 }
 
@@ -20,6 +20,7 @@ MySocket::~MySocket()
 
 void MySocket::deal_login(QStringList list)
 {
+
 	QString  curThread = QString::number(quintptr(QThread::currentThreadId()));
 	//登录请求
 	QString phone = (list[1].split("="))[1];

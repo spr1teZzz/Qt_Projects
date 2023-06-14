@@ -13,7 +13,7 @@ MainWidget::MainWidget(QWidget *parent)
 {
     ui.setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
-    this->setMouseTracking(true);
+    this->setMouseTracking(true); 
     select_file_flag = false;
     send_file_name = nullptr;
     fileSize = 0;//文件大小

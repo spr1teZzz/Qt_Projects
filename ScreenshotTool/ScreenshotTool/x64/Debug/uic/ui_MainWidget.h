@@ -23,6 +23,7 @@ class Ui_MainWidgetClass
 {
 public:
     QPushButton *Btn_start;
+    QPushButton *Btn_start_hide;
 
     void setupUi(QWidget *MainWidgetClass)
     {
@@ -31,7 +32,10 @@ public:
         MainWidgetClass->resize(214, 127);
         Btn_start = new QPushButton(MainWidgetClass);
         Btn_start->setObjectName(QStringLiteral("Btn_start"));
-        Btn_start->setGeometry(QRect(60, 30, 91, 51));
+        Btn_start->setGeometry(QRect(10, 30, 91, 51));
+        Btn_start_hide = new QPushButton(MainWidgetClass);
+        Btn_start_hide->setObjectName(QStringLiteral("Btn_start_hide"));
+        Btn_start_hide->setGeometry(QRect(110, 30, 91, 51));
 
         retranslateUi(MainWidgetClass);
 
@@ -41,7 +45,8 @@ public:
     void retranslateUi(QWidget *MainWidgetClass)
     {
         MainWidgetClass->setWindowTitle(QApplication::translate("MainWidgetClass", "MainWidget", 0));
-        Btn_start->setText(QApplication::translate("MainWidgetClass", "\345\274\200\345\220\257", 0));
+        Btn_start->setText(QApplication::translate("MainWidgetClass", "\346\210\252\345\233\276", 0));
+        Btn_start_hide->setText(QApplication::translate("MainWidgetClass", "\351\232\220\350\227\217\347\252\227\345\217\243\346\210\252\345\233\276", 0));
     } // retranslateUi
 
 };

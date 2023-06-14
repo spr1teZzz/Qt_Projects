@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QWidget>
 #include <QKeyEvent>
+#include <QThread>
 #include "colorwidget.h"
 #include "ui_MainWidget.h"
 #include "screenwidget.h"
@@ -17,9 +18,13 @@ class MainWidget : public QWidget
 public:
     MainWidget(QWidget *parent = nullptr);
     ~MainWidget();
+
+
 private slots :
     void Btn_start_clicked();
     void keyPressEvent(QKeyEvent* event);
+    void Btn_start_hide_clicked();
+    void showWidget();
 private:
     Ui::MainWidgetClass *ui;
 };

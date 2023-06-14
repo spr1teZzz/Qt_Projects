@@ -70,6 +70,7 @@ public:
         slider_video = new PlayerSlider(centralWidget);
         slider_video->setObjectName(QStringLiteral("slider_video"));
         slider_video->setGeometry(QRect(10, 440, 390, 20));
+        slider_video->setCursor(QCursor(Qt::PointingHandCursor));
         slider_video->setMouseTracking(true);
         slider_video->setOrientation(Qt::Horizontal);
         Btn_voiceIcon = new QPushButton(centralWidget);
@@ -108,6 +109,7 @@ public:
         Btn_Close = new QPushButton(centralWidget);
         Btn_Close->setObjectName(QStringLiteral("Btn_Close"));
         Btn_Close->setGeometry(QRect(870, 0, 30, 30));
+        Btn_Close->setCursor(QCursor(Qt::PointingHandCursor));
         widget_video = new QVideoWidget(centralWidget);
         widget_video->setObjectName(QStringLiteral("widget_video"));
         widget_video->setGeometry(QRect(10, 30, 650, 400));
@@ -118,7 +120,9 @@ public:
         slider_voice->setObjectName(QStringLiteral("slider_voice"));
         slider_voice->setEnabled(true);
         slider_voice->setGeometry(QRect(560, 440, 100, 20));
+        slider_voice->setCursor(QCursor(Qt::PointingHandCursor));
         slider_voice->setMouseTracking(true);
+        slider_voice->setContextMenuPolicy(Qt::CustomContextMenu);
         slider_voice->setOrientation(Qt::Horizontal);
         listWidget = new QListWidget(centralWidget);
         listWidget->setObjectName(QStringLiteral("listWidget"));

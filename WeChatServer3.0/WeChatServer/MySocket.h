@@ -46,9 +46,9 @@ signals:
     void WriteMessage(QByteArray ba);//UI发送过来数据
     void DeleteSocket();//主动关闭socket
 private:
-	QString fileName;
-	FILETYPE fileType;
-	int fileSize;
+	QString fileName;//当前文件名
+	FILETYPE fileType;//当前文件类型
+	int fileSize;//当前文件大小
 	int recvSize;//当前接收文件的大小
 	QByteArray filebuf;//当前接收的文件数据
 	int from_id;

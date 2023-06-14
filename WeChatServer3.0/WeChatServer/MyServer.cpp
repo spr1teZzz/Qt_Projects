@@ -18,7 +18,6 @@ MyServer::MyServer(QObject *parent)
     connect(sockethelper, &SocketHelper::Create, sockethelper, &SocketHelper::CreateSocket);
     connect(sockethelper, &SocketHelper::AddList, this, &MyServer::AddInf);
     connect(sockethelper, &SocketHelper::RemoveList, this, &MyServer::RemoveInf);
-    
 }
 
 MyServer::~MyServer()
@@ -101,7 +100,7 @@ void MyServer::incomingConnection(qintptr socketDescriptor)
     }
 }
 
-void MyServer::AddInf(MySocket* mysocket, int index,int uid) 
+void MyServer::AddInf(MySocket* mysocket, int index, int uid) 
 {
     if (uid == 0)//新连接
     {
@@ -122,6 +121,8 @@ void MyServer::AddInf(MySocket* mysocket, int index,int uid)
         QString ip = mysocket->peerAddress().toString();
         quint16 port = mysocket->peerPort();
         QString str_inf = QString("[%1:%2 (uid:%3)]").arg(ip).arg(port).arg(uid);
+
+        //根据socket查找comboBox内的选项,修改为带有uid的str_inf
         for (int i = 1; i < this->widget->ui->comboBox->count(); i++)
         {
             if (mysocket == this->widget->ui->comboBox->itemData(i).value<MySocket*>())
@@ -165,8 +166,6 @@ void MyServer::Foward(int fid, int tid, QString msg)
     {
         if (this->list_information[i].uid == tid)
         {
-            //m_outStream.setDevice(this->list_information[i].mysocket);
-            //m_outStream.setVersion(QDataStream::Qt_5_6);
             if (msg.startsWith(SE_FILE))
             {
                 //消息为文件
@@ -198,8 +197,7 @@ void MyServer::Foward(int fid, int tid, QString msg)
                 this->list_information[i].mysocket->flush();
                 this->list_information[i].mysocket->write(fileData);
                 this->list_information[i].mysocket->flush();
-                qDebug() << "File:"<<path<< " send successfully";
-                
+                qDebug() << "File:"<<path<< " send successfully"; 
             }
             else if (msg.startsWith(SE_IMAGE))
             {
