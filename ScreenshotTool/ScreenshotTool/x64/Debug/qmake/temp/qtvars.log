@@ -1,0 +1,4 @@
+WARNING: Could not parse Compiler option '-FS'; added to AdditionalOptions.
+WARNING: You can suppress these warnings with CONFIG+=suppress_vcproj_warnings.
+WARNING: Could not parse Compiler option '-Zc:strictStrings'; added to AdditionalOptions.
+WARNING: Could not parse Compiler option '-Zc:throwingNew'; added to AdditionalOptions.

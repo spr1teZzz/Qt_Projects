@@ -14,7 +14,8 @@
 #include <QTextCodec>
 #include <QMap>
 #include <QList>
-
+#include <QFile>
+#include <QDir>
 class MyServer;
 
 class MySocket  : public QTcpSocket
@@ -28,6 +29,14 @@ public:
     SocketHelper* sockethelper;
     void deal_login(QStringList list);//
     void deal_chat(QStringList list);//
+	void deal_remindData(QByteArray data);
+	void deal_chat(int fid, int tid, QString data);
+	enum FILETYPE {
+		FILE,
+		IMAGE,
+		TEXT,
+		OTHERDATA
+	};
 public slots:
     void deal_readyRead();//读取数据槽函数
     void deal_disconnect();//断开连接槽函数
@@ -36,7 +45,14 @@ signals:
     void AddMessage(QString data);//发送给UI显示
     void WriteMessage(QByteArray ba);//UI发送过来数据
     void DeleteSocket();//主动关闭socket
-
+private:
+	QString fileName;//当前文件名
+	FILETYPE fileType;//当前文件类型
+	int fileSize;//当前文件大小
+	int recvSize;//当前接收文件的大小
+	QByteArray filebuf;//当前接收的文件数据
+	int from_id;
+	int to_id;
 };
 
 

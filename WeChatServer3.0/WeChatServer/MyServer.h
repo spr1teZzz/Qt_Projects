@@ -1,13 +1,20 @@
 #pragma once
-
 #include <QTcpServer>
 #include "MyThread.h"
 #include <QThread>
 #include <QTcpSocket>
 #include <QDebug>
+#include <QDataStream>
 #include "mysocket.h"
 #include "ui_Widget.h"
 #include "Widget.h"
+#include <QDir>
+#include <QBuffer>
+#define SPLIT "@SPRITE@"
+#define SE_IMAGE "@IMAGE@"
+#define SE_FILE "@FILE@"
+#define SE_TEXT "@TEXT@"
+
 class Widget;
 class MyServer;
 
@@ -36,7 +43,7 @@ public:
 
     Widget *widget;
 private:
-    void incomingConnection(qintptr socketDescriptor);
+    void incomingConnection(qintptr socketDescriptor);//有新连接到来
 public slots:
     void AddInf(MySocket* mysocket, int index,int uid);//添加信息
     void RemoveInf(MySocket* mysocket);//移除信息

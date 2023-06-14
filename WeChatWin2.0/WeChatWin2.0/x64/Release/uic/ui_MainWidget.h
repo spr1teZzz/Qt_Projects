@@ -60,6 +60,7 @@ public:
     QPushButton *pushButtonShot;
     QPushButton *pushButtonRecords;
     QListWidget *listWidgetShow;
+    QPushButton *pushButtonSend;
     QWidget *pageAddressBook;
     QListView *listView_2;
     QWidget *pageCollect;
@@ -112,7 +113,7 @@ public:
         toolButtonProgram->setGeometry(QRect(0, 590, 55, 40));
         widget = new QWidget(MainWidgetClass);
         widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(50, 0, 885, 70));
+        widget->setGeometry(QRect(50, 0, 891, 70));
         pushButtonClose = new QPushButton(widget);
         pushButtonClose->setObjectName(QStringLiteral("pushButtonClose"));
         pushButtonClose->setGeometry(QRect(855, 0, 30, 25));
@@ -155,10 +156,13 @@ public:
         listWidget = new QListWidget(widgetChat);
         listWidget->setObjectName(QStringLiteral("listWidget"));
         listWidget->setGeometry(QRect(0, 0, 270, 650));
-        listWidget->setStyleSheet(QStringLiteral(""));
+        listWidget->setStyleSheet(QLatin1String("QListWidget{background:#E5E4E4; border:none;margin:0px,0px,0px,0px;}\n"
+"QListWidget::Item:hover{background:#DDDBDA; border:none}\n"
+"QListWidget::item:selected{background:#C8C7C6; border:none;    margin:0px,0px,0px,0px;}\n"
+""));
         widgetToolBar = new QWidget(pageChat);
         widgetToolBar->setObjectName(QStringLiteral("widgetToolBar"));
-        widgetToolBar->setGeometry(QRect(274, 410, 610, 40));
+        widgetToolBar->setGeometry(QRect(274, 400, 610, 40));
         pushButtonExpression = new QPushButton(widgetToolBar);
         pushButtonExpression->setObjectName(QStringLiteral("pushButtonExpression"));
         pushButtonExpression->setGeometry(QRect(30, 15, 20, 20));
@@ -173,7 +177,17 @@ public:
         pushButtonRecords->setGeometry(QRect(120, 15, 20, 20));
         listWidgetShow = new QListWidget(pageChat);
         listWidgetShow->setObjectName(QStringLiteral("listWidgetShow"));
-        listWidgetShow->setGeometry(QRect(269, 0, 620, 410));
+        listWidgetShow->setGeometry(QRect(270, 0, 621, 401));
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(listWidgetShow->sizePolicy().hasHeightForWidth());
+        listWidgetShow->setSizePolicy(sizePolicy);
+        listWidgetShow->setFocusPolicy(Qt::StrongFocus);
+        listWidgetShow->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        pushButtonSend = new QPushButton(pageChat);
+        pushButtonSend->setObjectName(QStringLiteral("pushButtonSend"));
+        pushButtonSend->setGeometry(QRect(740, 590, 91, 41));
         stackedWidget->addWidget(pageChat);
         pageAddressBook = new QWidget();
         pageAddressBook->setObjectName(QStringLiteral("pageAddressBook"));
@@ -234,6 +248,7 @@ public:
         pushButtonFile->setText(QString());
         pushButtonShot->setText(QString());
         pushButtonRecords->setText(QString());
+        pushButtonSend->setText(QApplication::translate("MainWidgetClass", "\345\217\221\351\200\201", 0));
     } // retranslateUi
 
 };

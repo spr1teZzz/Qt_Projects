@@ -1,6 +1,5 @@
 #pragma once
 #pragma execution_character_set("utf-8")
-#include <qwidget.h>
 #include <QLabel>
 #include <QPixmap>
 #include <QLineEdit>
@@ -15,6 +14,14 @@
 #include <QByteArray>
 #include <QList>
 #include <QListWidgetItem>
+#include <QWidget>
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
+#include <QDir>
+#include <QFile>
+#include "ui_loginwidget.h"
+
+#define SPLIT "@SPRITE@"
 class userInfo
 {
 public:
@@ -62,32 +69,29 @@ public:
 	QString msg_date;
 	QString img;
 };
-class loginWidget :
-    public QWidget
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class LoginWidgetClass; };
+QT_END_NAMESPACE
+
+class LoginWidget : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
+
 public:
-	loginWidget( QWidget* parent = nullptr);
-    ~loginWidget();
-    void btn_login();
+	LoginWidget(QWidget *parent = nullptr);
+	~LoginWidget();
+	void btn_login();
 	static QTcpSocket* socket;
 signals:
-    void loginUser(int, QString, QMap<int, userInfo>,QMap<int,QList<Message>>);
+	void loginUser(int, QString, QMap<int, userInfo>, QMap<int, QList<Message>>);
+protected:
+	// ¹ýÂËÊÂ¼þ
+	bool eventFilter(QObject* obj, QEvent* event) override;
 public slots:
-    void loginWindowClose();
-    void recvMsg();
-
+	void loginWindowClose();
+	void recvMsg();
 private:
-    QLineEdit* LineEdit_username;
-    QLineEdit* LineEdit_password;
-    
-};
-struct sendMsgType
-{
-	int type;
-	int uid;
-	QString image;
-	QMap<int, QList<Message>> message_map;
-	QMap<int, userInfo> userinfo_map;
-};
 
+	Ui::LoginWidgetClass *ui;
+};

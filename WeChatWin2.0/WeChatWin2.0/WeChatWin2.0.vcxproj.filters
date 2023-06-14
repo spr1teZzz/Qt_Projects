@@ -43,9 +43,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="loginwidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="chatFrom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -55,11 +52,20 @@
     <ClCompile Include="MsgFrom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="loginwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filemanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="textlabel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mytextedit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="loginwidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="chatFrom.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -69,12 +75,27 @@
     <QtMoc Include="MsgFrom.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="loginwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="filemanager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="textlabel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="mytextedit.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="chatFrom.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Client.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="loginwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

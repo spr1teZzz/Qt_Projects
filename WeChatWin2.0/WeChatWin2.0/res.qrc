@@ -27,5 +27,34 @@
         <file>image/lxp.png</file>
         <file>image/userImage2.png</file>
         <file>image/userImage4.png</file>
+        <file>image/login_in.png</file>
+        <file>image/scrollbar/1.png</file>
+        <file>image/scrollbar/2.png</file>
+        <file>image/scrollbar/3.png</file>
+        <file>image/scrollbar/4.png</file>
+        <file>image/scrollbar/addpage.png</file>
+        <file>image/scrollbar/subpage.png</file>
+        <file>image/scrollbar/tiao.png</file>
+        <file>image/loading.gif</file>
+        <file>image/tools/collect.png</file>
+        <file>image/tools/collect2.png</file>
+        <file>image/tools/contacts.png</file>
+        <file>image/tools/contacts2.png</file>
+        <file>image/tools/folder.png</file>
+        <file>image/tools/folder2.png</file>
+        <file>image/tools/look.png</file>
+        <file>image/tools/message.png</file>
+        <file>image/tools/message2.png</file>
+        <file>image/tools/Moments.png</file>
+        <file>image/tools/phone.png</file>
+        <file>image/tools/program.png</file>
+        <file>image/tools/serach.png</file>
+        <file>image/tools/cut.png</file>
+        <file>image/tools/emotion.png</file>
+        <file>image/tools/message3.png</file>
+    </qresource>
+    <qresource prefix="/qss">
+        <file>scrollbar.qss</file>
+        <file>QTextEdit_scrollbar.qss</file>
     </qresource>
 </RCC>

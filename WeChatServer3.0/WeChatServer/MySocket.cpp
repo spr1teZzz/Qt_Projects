@@ -1,12 +1,15 @@
 #include "MySocket.h"
-
-
 #if _MSC_VER >=1600
 #pragma execution_character_set("utf-8")
 #endif
-
+#define MAX_BUFFER_SIZE 65535
+#define SE_IMAGE "@IMAGE@"
+#define SE_FILE "@FILE@"
+#define SE_TEXT "@TEXT@"
 MySocket::MySocket(QObject *parent)
 {
+	fileSize = 0;
+	recvSize = 0;
 	this->m_tcpServer = static_cast<MyServer*>(parent);
 }
 
@@ -17,6 +20,7 @@ MySocket::~MySocket()
 
 void MySocket::deal_login(QStringList list)
 {
+
 	QString  curThread = QString::number(quintptr(QThread::currentThreadId()));
 	//登录请求
 	QString phone = (list[1].split("="))[1];
@@ -32,14 +36,6 @@ void MySocket::deal_login(QStringList list)
 	login_db.setPassword("123456");            //密码
 	login_db.setConnectOptions("CHARSET='utf8'");
 	bool ok = login_db.open();
-	//if(ok) {
-	//	qDebug() << "成功连接数据库";
-	//}
-	//else
-	//{
-	//	QMessageBox::warning(NULL, "警告", "login无法连接数据库");
-	//}
-	//处理登录  发送信号
 	QSqlQuery login_query(login_db);
 	QString login_sql = "select * from wc_user where phone = '" + phone + "'and password = '" + password + "' ;";
 	qDebug() << login_sql;
@@ -48,7 +44,7 @@ void MySocket::deal_login(QStringList list)
 	QString user_url;
 	if (login_res)
 	{
-		//qDebug() << "login success!";
+		//登录成功
 		while (login_query.next())
 		{
 			user_id = login_query.value("uid").toInt();
@@ -64,7 +60,7 @@ void MySocket::deal_login(QStringList list)
 			//账号或密码错误
 			qDebug() << "账号或密码错误";
 			//QString send_msg = "type=true&user_id=" + QString::number(user_id) + "&user_url=" + user_url;
-			QString send_msg = "type=false&user_id=0&user_url=NULL";
+			QString send_msg = QString("type=false%1user_id=0%1user_url=NULL").arg(SPLIT);
 			this->write(send_msg.toUtf8());
 			return;
 		}
@@ -198,7 +194,34 @@ void MySocket::deal_login(QStringList list)
 	例如用Tcp发送结构体，内存共享结构体，都需要用到memcpy和memmove进行拷贝，
 	含有QString成员的结构体拷贝之后的数据便会出错，甚至导致程序闪退。  */
 }
+void MySocket::deal_chat(int fid, int tid, QString data)
+{
+	QString  curThread = QString::number(quintptr(QThread::currentThreadId()));
+	//meg_db
+	QSqlDatabase db_insert_msg = QSqlDatabase::addDatabase("QMYSQL", curThread + "insertMsg");  //连接的MYSQL的数据库驱动
+	db_insert_msg.setHostName("localhost");         //主机名
+	db_insert_msg.setPort(3306);                    //端口
+	db_insert_msg.setDatabaseName("test");          //数据库名
+	db_insert_msg.setUserName("root");              //用户名
+	db_insert_msg.setPassword("123456");            //密码
+	db_insert_msg.open();
+	QSqlQuery insert_query(db_insert_msg);
+	//插入数据库
+	QString sql = QString("insert into wc_messagerecords(fromid,toid,msgdate,content) values('%1','%2',now(),'%3')").arg(fid).arg(tid).arg(data);
+	qDebug() << sql;
+	insert_query.exec(sql);
+	db_insert_msg.close();
 
+	MySocket* tcpsocket = static_cast<MySocket*>(sender());
+	//获取客户端IP地址,端口号
+	QString ip = tcpsocket->peerAddress().toString();
+	quint16 port = tcpsocket->peerPort();
+	QString msg = QString("[%1：%2 UID:%3 to UID: %4] \n%5").arg(ip).arg(port).arg(fid).arg(tid).arg(data);
+	//发送到UI线程显示
+	emit AddMessage(msg);
+	//发送给server进行查找tid绑定的socket
+	emit  this->sockethelper->UserCommunication(fid, tid, data);
+}
 void MySocket::deal_chat(QStringList list)
 {
 	QString  curThread = QString::number(quintptr(QThread::currentThreadId()));
@@ -236,6 +259,50 @@ void MySocket::deal_chat(QStringList list)
 	emit  this->sockethelper->UserCommunication(fid, tid, recv_msg);
 }
 
+void MySocket::deal_remindData(QByteArray data)
+{
+	// "type=2@SPRITE@from=1@SPRITE@to=2@SPRITE@@IMAGE@\timage_10125.png\t136004\t"
+	QStringList list = QString(data).split(SPLIT);
+	if (list.size()>0 && list[0].startsWith("type"))
+	{
+		//处理新的数据消息
+		qDebug() << "deal_remindData(处理新消息)";
+	}
+	else
+	{
+		//接收的数据为上一个数据剩下的数据
+		qDebug() << "deal_remindData";
+		filebuf += data;
+		recvSize += data.length();
+		if (recvSize >= fileSize) {
+			if (fileType == FILETYPE::FILE) {
+				QFile file(fileName);
+				file.open(QIODevice::WriteOnly);
+				file.write(filebuf);
+				file.close();
+				filebuf = nullptr;
+				fileSize = 0;
+				recvSize = 0;
+			}
+			else if (fileType == FILETYPE::IMAGE) {
+				//根据文件名和文件大小接收和保存文件
+				QByteArray imagedata = QByteArray::fromBase64(filebuf);
+				QImage image;
+				qDebug() << "receive image:" << fileName;
+				image.loadFromData(imagedata);
+				image.save(fileName);
+				filebuf = nullptr;
+				fileSize = 0;
+				recvSize = 0;
+			}
+			else
+			{
+				qDebug() << "Other Data";
+			}
+		}
+	}
+}
+
 void MySocket::deal_disconnect()
 {
     MySocket* tcpsocket = static_cast<MySocket*>(sender());
@@ -263,25 +330,131 @@ void MySocket::deal_write(QByteArray ba)
 void MySocket::deal_readyRead()
 {
 	MySocket* tcpsocket = static_cast<MySocket*>(sender());
-	//获取客户端发来的数据
-	QByteArray ba = tcpsocket->readAll();
-	QString data;
-	data = QString::fromLocal8Bit(ba);
-
-	//处理传过来的数据格式：from:2,to:3,hhh
-	qDebug() << "receivedata:" << data;
-	QStringList list = data.split("&");
-	int type = (list[0].split("="))[1].toInt();
-	if (type == 1)
-	{
-		deal_login(list);
+	QByteArray data;
+	while (tcpsocket->bytesAvailable() > 0) {
+		QByteArray buffer = tcpsocket->read(qMin(tcpsocket->bytesAvailable(), (long long)MAX_BUFFER_SIZE));
+		data.append(buffer);
 	}
-	else if (type == 2)
+	//获取客户端发来的数据
+	if (fileSize == 0)
 	{
-		deal_chat(list);
+		//传入消息信息
+		qDebug() << "receivedata:" << data;
+		QStringList list = QString(data).split(SPLIT);
+		if (list.size() >= 3)
+		{
+			int type = (list[0].split("="))[1].toInt();
+			if (type == 1)
+			{
+				deal_login(list);
+			}
+			else if (type == 2)
+			{
+				//"type=2@SPRITE@from=1@SPRITE@to=2@SPRITE@@IMAGE@\timage_7588.png\t136004\t"
+				// "type=2@SPRITE@from=1@SPRITE@to=2@SPRITE@@TEXT@\tNULL\t6\t你好"
+				//deal_chat(list);
+				from_id = (list[1].split("="))[1].toInt();
+				to_id = (list[2].split("="))[1].toInt();
+				QStringList contentList = list[3].split("\t");
+				fileName = contentList[1];
+				fileSize = contentList[2].toInt();
+				if (contentList[0] == SE_IMAGE)
+				{
+					//图片
+					fileType = FILETYPE::IMAGE;
+				}
+				else if (contentList[0] == SE_FILE)
+				{
+					//文件
+					fileType = FILETYPE::FILE;
+				}
+				else if (contentList[0] == SE_TEXT)
+				{
+					//文字
+					fileType = FILETYPE::TEXT;
+					//直接处理
+					qDebug() << "接收到的消息" << contentList[3];
+					deal_chat(from_id, to_id, SE_TEXT+contentList[3]);
+					filebuf = nullptr;
+					fileSize = 0;
+					recvSize = 0;
+					return;
+				}
+				else
+				{
+					qDebug() << "Other Data";
+					fileType = FILETYPE::OTHERDATA;
+					return;
+				}
+
+
+				if (contentList[3] == "")
+				{
+					qDebug() << "contentList[3] == NULL";
+					recvSize = 0;
+					filebuf.clear();
+				}
+				else
+				{
+					qDebug() << "contentList[3] != NULL";
+					filebuf.clear();
+					filebuf.append(contentList[3]);
+					recvSize = contentList[3].size();
+				}
+			}
+			else
+			{
+				qDebug() << "传送的数据有误";
+			}
+		}
 	}
 	else
 	{
-		qDebug() << "传送的数据有误";
+		//根据文件名和文件大小接收和保存文件
+		if (data.size() + recvSize > fileSize)
+		{
+			filebuf.append(data.mid(0, fileSize - recvSize));
+			deal_remindData(data.mid(fileSize - recvSize));
+			recvSize += data.mid(0, fileSize - recvSize).length();//每接收一次文件，当前文件大小+1
+		}
+		else
+		{
+			filebuf.append(data);
+			recvSize += data.size();//每接收一次文件，当前文件大小+1
+		}
+	}
+
+	qDebug() << "flieName:" << fileName << " fileSize:" << fileSize << " recvSize:" << recvSize;
+	if (recvSize >= fileSize && fileSize != 0) {
+		if (fileType == FILETYPE::FILE) {
+			QString curpath = QDir::currentPath() + "/..";
+			QString path = QString("%1/downFile/%2").arg(curpath).arg(fileName);
+			QFile file(path);
+			file.open(QIODevice::WriteOnly);
+			file.write(filebuf);
+			file.close();
+			deal_chat(from_id, to_id, SE_FILE + fileName);
+			filebuf = nullptr;
+			fileSize = 0;
+			recvSize = 0;
+		}
+		else if (fileType == FILETYPE::IMAGE) {
+			//根据文件名和文件大小接收和保存文件
+			QByteArray imagedata = QByteArray::fromBase64(filebuf);
+			QImage image;
+			qDebug() << "receive image:" << fileName;
+			QString curpath = QDir::currentPath() + "/..";
+			QString path = QString("%1/downImage/%2").arg(curpath).arg(fileName);
+			image.loadFromData(imagedata);
+			image.save(path);
+			deal_chat(from_id, to_id, SE_IMAGE + fileName);
+			filebuf = nullptr;
+			fileSize = 0;
+			recvSize = 0;
+		}
+		else
+		{
+			qDebug() << "Other Data";
+		}
 	}
 }

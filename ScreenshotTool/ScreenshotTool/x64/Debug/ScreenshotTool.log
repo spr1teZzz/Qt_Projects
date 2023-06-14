@@ -1,0 +1,8 @@
+﻿  moc MainWidget.h
+  moc screenwidget.h
+  MainWidget.cpp
+  main.cpp
+  screenwidget.cpp
+  moc_MainWidget.cpp
+  moc_screenwidget.cpp
+  ScreenshotTool.vcxproj -> D:\Qt_projects\ScreenshotTool\x64\Debug\ScreenshotTool.exe
